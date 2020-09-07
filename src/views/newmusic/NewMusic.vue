@@ -79,6 +79,7 @@
 					
 					this.mTableData = res.data;
 					this.$refs.songs.firstCK = false;
+					this.loading = false;
 				})
 			}
 		}

@@ -13,13 +13,14 @@
 				<div class="lyric">
 					<div class="tit">{{name}}</div>
 					<div class="wd">歌手：<span>{{aName}}</span></div>
-					<div class="lyric-wp">
+					<div class="lyric-wp" v-show='lrc.indexOf("[") > -1'>
 						<div class="lyc-in amt" ref="lyn">
 							<p class="amt" v-for="(item,index) in lrcfmt" :class="{on : curT === index}" >
 								{{item.txt}}
 							</p> 
 						</div>
 					</div>
+					<div class="nolyc" v-show='lrc.indexOf("[") === -1'>暂无歌词</div>
 				</div>
 			</div>
 			<div class="sd-con">
@@ -128,31 +129,36 @@
 				})
 			},
 			lrcShow(){
-				let arr = []
-				let lrcArr = this.lrc.split("\n");
-				lrcArr.pop();
+				if(this.lrc.indexOf("[") === -1) {
+					this.lrcfmt =[];
+				}else{
+					
 				
-				for(let item of lrcArr){
-					let time = item.split("]")[0]
-					time = time.split("[")[1]
-					let txt = item.split("]")[1]
+					let arr = []
+					let lrcArr = this.lrc.split("\n");
+					lrcArr.pop();
 					
-					let m = parseInt(time.split(":")[0])*60;
-					let s = parseInt(time.split(":")[1].split(".")[0])
-					let ss = parseInt(time.split(":")[1].split(".")[1])/1000
+					for(let item of lrcArr){
+						let time = item.split("]")[0]
+						time = time.split("[")[1]
+						let txt = item.split("]")[1]
+						
+						let m = parseInt(time.split(":")[0])*60;
+						let s = parseInt(time.split(":")[1].split(".")[0])
+						let ss = parseInt(time.split(":")[1].split(".")[1])/1000
+						
+						time = m + s + ss;
+						
+						arr.push({time:time,txt:txt})
+						
+					}
+					arr=arr.filter((ele, index, arr) => {
+						return ele.txt!=""
+					})
 					
-					time = m + s + ss;
-					
-					arr.push({time:time,txt:txt})
-					
+					arr.push({time:'9999999999',txt:" "})
+					this.lrcfmt = arr;
 				}
-				arr=arr.filter((ele, index, arr) => {
-					return ele.txt!=""
-				})
-				
-				arr.push({time:'9999999999',txt:" "})
-				this.lrcfmt = arr;
-				
 			},
 			timePlay(){
 				this.timer = setInterval(() => {
@@ -330,5 +336,10 @@
 				opacity:1;
 				
 	    }
+	}
+	.nolyc{
+		padding: 30px 20px;
+		font-size: 15px;
+		color: $black3;
 	}
 </style>

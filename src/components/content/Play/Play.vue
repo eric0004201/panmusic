@@ -61,7 +61,7 @@
 <script>
 	import SongDetail from './SongDetail.vue'
 	import { mapGetters } from 'vuex'
-	import { fenFormat } from 'common/utils.js'
+	import { fenFormat, randomFrom } from 'common/utils.js'
 	import { getPlayInfo, getLyric } from 'network/player.js'
 	import { songInfo } from 'common/mixin.js'
 	
@@ -154,8 +154,15 @@
 				this.id = id;
 				
 				getLyric(this.id).then(res => {
-					this.$refs.sd.lrc = res.lrc.lyric;
-					this.$refs.sd.lrcShow()
+					if(res.hasOwnProperty('lrc')){
+						this.$refs.sd.lrc = res.lrc.lyric;
+						this.$refs.sd.lrcShow()
+					}else{
+						this.$refs.sd.lrc = [];
+						this.$refs.sd.lrcShow()
+					}
+					
+					
 				})
 				
 				let mp3 = `https://music.163.com/song/media/outer/url?id=${id}.mp3`
@@ -222,6 +229,13 @@
 					}else{
 						nid = this.getMList[num+1].id
 						this.item = this.getMList[num+1]
+					}
+					
+					//随机
+					if(this.pm === 2){
+						let r = randomFrom(0,this.getMList.length-1)
+						nid = this.getMList[r].id
+						this.item = this.getMList[r]
 					}
 					
 					this.setInfo(this.item)
