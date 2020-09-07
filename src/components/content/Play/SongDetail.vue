@@ -137,8 +137,12 @@
 					let arr = []
 					let lrcArr = this.lrc.split("\n");
 					lrcArr.pop();
-					
+					if(lrcArr[0].indexOf("[") === -1) {
+						lrcArr.shift()
+					}
 					for(let item of lrcArr){
+						
+						
 						let time = item.split("]")[0]
 						time = time.split("[")[1]
 						let txt = item.split("]")[1]
