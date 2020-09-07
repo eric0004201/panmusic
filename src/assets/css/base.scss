@@ -1,0 +1,82 @@
+@charset "utf-8";
+
+$black1: #0b0b0b;
+$black2:#5d5c5c;
+$black3: #b0b0b0;
+
+$fs14:14px;
+$fs16:16px;
+$fs18:18px;
+
+$bgTop:#f9f9f9;
+$bgLeft:#ededed;
+
+$navHoverBg:#e7e7e7;
+$navActiveBg:#e2e2e2;
+$navActiveColor:#d33a31;
+
+.amt{
+	transition: all 0.3s;
+}
+
+@mixin list-item {
+  
+  margin-bottom: 30px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+@mixin mlist {
+	margin-bottom: 20px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-content:flex-start;
+}
+
+@mixin mlist-tit {
+	font-size: $fs14;
+	color: $black1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-top: 4px;
+}
+
+@mixin mlist-play {
+	font-size: 34px;
+	background: rgba(255,255,255,0.7);
+	border-radius: 50%;
+	width: 34px;
+	height: 34px;
+	color: $navActiveColor;
+	line-height: 34px;
+	opacity: 0;
+}
+::-webkit-scrollbar {
+ 
+  width : 6px; 
+  height: 2px;
+  }
+::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius   : 6px;
+  background-color: skyblue;
+  background-image: -webkit-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.2) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.2) 75%,
+      transparent 75%,
+      transparent
+  );
+  }
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background   : #ededed;
+  border-radius: 10px;
+}

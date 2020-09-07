@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+.main{
+	position: fixed;
+	left: 250px;
+	right: 0;
+	top: 60px;
+	bottom: 70px;
+	overflow: auto;
+}
+.main-in{
+	width: 1200px;
+	margin: 0 auto;
+	padding-top: 20px;
+	min-width: 800px;
+}
+
