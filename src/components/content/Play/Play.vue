@@ -147,7 +147,7 @@
 					this.$refs.sd.isPlay = true;
 					this.$refs.sd.timePlay()
 				}
-				this.audio.paused;
+				
 				
 			},
 			playMusic(id){
@@ -205,7 +205,6 @@
 				},200)
 			},
 			sChange(e){
-				
 				this.audio.currentTime = e/1000*this.audio.duration
 			},
 			playNext(){
@@ -454,9 +453,9 @@
 	.play-bar ::v-deep .el-slider__button-wrapper{
 		display: none;
 	}
-	.play-bar:hover ::v-deep .el-slider__button-wrapper{
-		display: block;
-	}
+	// .play-bar:hover ::v-deep .el-slider__button-wrapper{
+	// 	display: block;
+	// }
 	.play-bar ::v-deep .el-slider__bar{
 		height: 3px;
 		background: $navActiveColor;
