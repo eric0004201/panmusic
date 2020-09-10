@@ -36,5 +36,5 @@
 </script>
 
 <style lang="scss" scoped>
-	
+	.left-nav{}
 </style>
