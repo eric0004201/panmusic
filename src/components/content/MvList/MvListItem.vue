@@ -70,7 +70,8 @@
 		@include mlist-play;
 		position: absolute;
 		left: 50%;
-		top: 70px;
+		top: 50%;
+		margin-top: -37px;
 		transform: translate(-50%,0);
 	}
 	.mv-item:hover .icon-hide{

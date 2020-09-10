@@ -5,7 +5,7 @@
 			<div class="ml-info">
 				<div class="ml-tit1">{{info.name}}</div>
 				<div class="ml-tit2">
-					<img :src="info.creator.avatarUrl"/> 
+					<img :src="info.creator.avatarUrl | imageUrl"/> 
 					<span class="name">{{info.creator.nickname}}</span>
 					<span class="time">{{info.createTime | dfmt}} 创建</span>
 				</div>

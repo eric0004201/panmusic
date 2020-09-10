@@ -100,8 +100,7 @@
 		color: $black1;
 		font-size: $fs18;
 		line-height: 60px;
-		width: 1200px;
-		margin: 0 auto;
+		text-align: center;
 		
 		
 	}
