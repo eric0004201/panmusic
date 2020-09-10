@@ -2,7 +2,7 @@
 	<div class="new">
 		<div class="new-item" v-for="(item,index) in list" :key="index" @click="play(item)">
 			<div class="num">{{numFormt(index)}}</div>
-			<div class="img"><img :src="item.picUrl" /></div>
+			<div class="img"><img :src="item.picUrl | imageUrl" /></div>
 			<div class="wd">
 				<div class="tip">{{item.name}}</div>
 				<div>{{sname(item.song.artists)}}</div>
@@ -26,6 +26,11 @@
 			}
 		},
 		mixins:[artName],
+		filters:{
+			imageUrl(src){
+				return "//"+src.split("//")[1] + "?param=100y100";
+			}
+		},
 		props:{
 			list:{
 				type:Array,

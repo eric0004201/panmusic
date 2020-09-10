@@ -1,6 +1,6 @@
 <template>
 	<div class="mv-item" @click="goMV">
-		<img class="img" :src="obj.picUrl||obj.cover" />
+		<img class="img" :src="imagePath" />
 		<div class="paly-num"><i class="el-icon-caret-right"></i>{{obj.playCount}}</div>
 		<div class="wd">{{obj.name}}</div>
 		<div class="name">{{obj.artistName}}</div>
@@ -23,6 +23,18 @@
 			goMV(){
 				this.$router.push('/video/'+this.obj.id)
 			}
+		},
+		computed:{
+			imagePath(){
+				
+				if(this.obj.hasOwnProperty('picUrl')){
+					
+					return "//"+this.obj.picUrl.split("//")[1] + "?param=320y180";
+				}else{
+					return "//" + this.obj.cover.split("//")[1] + "?param=320y180"
+				}
+			}
+			
 		}
 		
 	}

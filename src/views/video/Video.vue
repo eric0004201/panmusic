@@ -54,7 +54,7 @@
 			this.player = this.$refs.player;
 			
 			getVideo(this.id).then(res => {
-				this.player.src = res.data.url;
+				this.player.src = "//" + res.data.url.split("//")[1];
 			})
 			
 			getVideoInfo(this.id).then(res => {

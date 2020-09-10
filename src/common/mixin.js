@@ -35,3 +35,12 @@ export const artName = {
 		}
 	}
 }
+
+export const imgSrc = {
+	filters:{
+		imageUrl(src){
+			return "//"+src.split("//")[1];
+		}
+	}
+}
+

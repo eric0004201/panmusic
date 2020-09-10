@@ -1,7 +1,7 @@
 <template>
 	<div class="main" id="main" v-loading="loading">
 		<div class="ml-info-wp" v-if="Object.keys(info).length>1">
-			<div class="ml-img"><img :src="info.coverImgUrl"/></div>
+			<div class="ml-img"><img :src="info.coverImgUrl | imageUrl"/></div>
 			<div class="ml-info">
 				<div class="ml-tit1">{{info.name}}</div>
 				<div class="ml-tit2">
@@ -40,6 +40,7 @@
 	import Comments from 'components/content/Comments/Comments.vue'
 	import { getListInfo, getListItem, getComments } from 'network/player.js'
 	import { fenFormat, dateFormat } from 'common/utils.js'
+	import { imgSrc } from 'common/mixin.js'
 	
 	export default{
 		name:"MusicList",
@@ -61,6 +62,7 @@
 				cur:-1
 			}
 		},
+		mixins:[imgSrc],
 		components:{
 			Pagination,
 			Comments,

@@ -1,10 +1,10 @@
 <template>
 	<div class="main" ref='main'>
 		<div class="main-in">
-			<div class="head">
-				<div class="hbg"><img :src="headCon.coverImgUrl"/></div>
+			<div class="head" v-if="Object.keys(headCon).length>0">
+				<div class="hbg"><img :src="headCon.coverImgUrl | imageUrl"/></div>
 				<div class="hcon">
-					<div class="img"><img :src="headCon.coverImgUrl+'?param=280y280' "/></div>
+					<div class="img"><img :src="headCon.coverImgUrl | imageUrl "/></div>
 					<div class="info">
 						<div class="tit1" @click="goM">精品歌单</div>
 						<div class="tit2">{{headCon.name}}</div>
@@ -29,7 +29,7 @@
 	import SongSheet from 'components/content/SongSheet/SongSheet.vue'
 	import Tags from 'components/content/Tags/Tags.vue'
 	import { getListHead, getListCon } from 'network/find.js'
-	
+	import { imgSrc } from 'common/mixin.js'
 	
 	export default{
 		name:"Recommend",
@@ -38,6 +38,7 @@
 			Pagination,
 			Tags
 		},
+		mixins:[imgSrc],
 		data(){
 			return {
 				pageSize:50,
@@ -67,6 +68,7 @@
 				this.loading = false
 			})
 		},
+		
 		methods:{
 			goM(){
 				this.$router.push('/musiclist/'+this.headId)

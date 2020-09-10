@@ -108,9 +108,9 @@
 			imgSrc(val){
 				
 				if(val.row.hasOwnProperty('al')){
-					return val.row.al.picUrl + '?param=120y120' 
+					return "//" + val.row.al.picUrl.split("//")[1] + '?param=120y120' 
 				}else{
-					return val.row.album.picUrl + '?param=120y120' 
+					return "//" + val.row.album.picUrl.split("//")[1] + '?param=120y120' 
 				}
 				
 				

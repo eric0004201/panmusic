@@ -29,9 +29,10 @@
 			imagePath(){
 				
 				if(this.obj.hasOwnProperty('picUrl')){
-					return this.obj.picUrl + "?param=300y300"
+					
+					return "//"+this.obj.picUrl.split("//")[1] + "?param=300y300";
 				}else{
-					return this.obj.coverImgUrl + "?param=300y300"
+					return "//" + this.obj.coverImgUrl.split("//")[1] + "?param=300y300"
 				}
 			}
 		},
