@@ -44,3 +44,27 @@ export const imgSrc = {
 	}
 }
 
+export const collectSongLength = {
+	methods:{
+		collectSongLength(type = 'collectList'){
+			if(localStorage.getItem(type) !== null){
+				let sc =  JSON.parse(localStorage.getItem(type));
+				return sc.length
+			}
+			
+		}
+	}
+}
+
+export const collectSong = {
+	methods:{
+		collectSong(type = 'collectList'){
+			if(localStorage.getItem(type) !== null){
+				let sc =  JSON.parse(localStorage.getItem(type));
+				return sc;
+			}
+			
+		}
+	}
+}
+

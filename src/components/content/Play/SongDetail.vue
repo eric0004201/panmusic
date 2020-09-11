@@ -174,6 +174,7 @@
 							if(i<7){
 								this.$refs.lyn.style.marginTop = 0;
 							}else if(i>=7 && i<this.lrcfmt.length-7){
+								
 								this.$refs.lyn.style.marginTop = -(i-7) * this.pheight + "px";
 							}
 						}
@@ -279,7 +280,7 @@
 	    }
 	}
 	.lyric{
-		width: 500px;
+		width: 600px;
 		margin-top: 100px;
 	}
 	.tit{
@@ -299,10 +300,10 @@
 		margin-top: 30px;
 	}
 	.lyric-wp{
-		height: 450px;
+		height: 458px;
 		overflow: hidden;
 		margin: 40px 0;
-		padding-left: 20px;
+		margin-left: 20px;
 	}
 	.lyc-in{
 		
@@ -311,32 +312,38 @@
 		font-size: 15px;
 		color: $black3;
 		line-height: 30px;
+		
+		white-space: nowrap;
 	}
 	.lyc-in p.on{
 		font-weight: bold;
 		color: $black1;
-		animation: lyc 1s ease-out 1;
+		animation: lyc 0.6s ease-out 1;
 		transform-origin:left center;
-		animation-fill-mode:forwards backwards;
-		transform:  scale(1.2); 
+		animation-fill-mode:forwards;
+		transform:  scale(1.15); 
+		line-height: 1.5;
+		padding-top: 10px;
+		padding-bottom: 10px;
 	}
 	@keyframes lyc {
 	    0% {   
 				
-				color: #eee;
+				color: #fff;
 				letter-spacing: 1.3;
-	      transform: scale(1.5); 
+	      transform: scale(0.8); 
 				opacity:0.5;
 				filter: blur(3px);
 	    }
 			60%{
 			  color:$navActiveColor;        
 				filter: blur(0);		 
+				transform: scale(1.23); 
 			} 
 	    100% {    
 				letter-spacing: 1;
 				color: $black1;
-	      transform:  scale(1.2); 
+	      transform:  scale(1.15); 
 				opacity:1;
 				
 	    }

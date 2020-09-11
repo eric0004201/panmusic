@@ -20,9 +20,12 @@
 			<div class="play-info" @click="openD" v-if="Object.keys(item).length>0">
 				<div class="pimg"><img class="amt" :src="album.blurPicUrl + '?param=50y50' " /></div>
 				<div class="pcon">
-					<div><span class="m-tit">{{item.name}}</span> <span class="m-tit2">- {{mperson}}</span></div>
+					<div class="m-info"><span class="m-tit">{{item.name}}</span> <span class="m-tit2">- {{mperson}}</span></div>
 					<div class="m-dur">{{curDurFen}} / {{duration | fen}}</div>
 				</div>
+			</div>
+			<div class="collect-wp" v-show="Object.keys(item).length>0">
+				<collect ref="col" @collect="collect"></collect>
 			</div>
 			<div class="play-wrap">
 				<div class="bn-back" @click="playBack()"><i class="el-icon-back"></i></div>
@@ -60,15 +63,17 @@
 
 <script>
 	import SongDetail from './SongDetail.vue'
+	import Collect from 'components/common/collect/Collect.vue'
 	import { mapGetters } from 'vuex'
-	import { fenFormat, randomFrom } from 'common/utils.js'
+	import { fenFormat, randomFrom, setItem, removeItem, checkCollect } from 'common/utils.js'
 	import { getPlayInfo, getLyric } from 'network/player.js'
 	import { songInfo } from 'common/mixin.js'
 	
 	export default{
 		name:"Play",
 		components:{
-			SongDetail
+			SongDetail,
+			Collect
 		},
 		computed:{
 			...mapGetters(['getMList','getTMList']),
@@ -93,10 +98,20 @@
 				curTime:0,
 				loop:false,
 				openDetail:false,
-				lrc:''
+				lrc:'',
+				isErr:false
 			}
 		},
 		methods:{
+			collect(tf){
+				if(tf === true){
+					setItem(this.item)
+				}else{
+					removeItem(this.item)
+				}
+				this.$bus.$emit("itemChange");
+				
+			},
 			setMode(){
 				if(this.pm>=3) this.pm = 0;
 				this.pm+=1;
@@ -110,7 +125,13 @@
 			},
 			openD(){
 				this.openDetail = true;
-				this.$refs.sd.isPlay = true;
+				if(this.isPause === true){
+					this.$refs.sd.isPlay = false;
+					this.$refs.sd.timeStop()
+				}else{
+					this.$refs.sd.isPlay = true;
+					
+				}
 				this.$refs.sd.isd = true;
 				
 			},
@@ -132,7 +153,7 @@
 			play(){
 				
 				if(this.getMList.length === 0) return; 
-				
+				if(this.isErr === true) return; 
 				this.isPause=!this.isPause;
 				if(this.isPause){
 					this.audio.pause();
@@ -153,6 +174,7 @@
 			playMusic(id){
 				this.id = id;
 				
+				this.$refs.col.ison = checkCollect(id);
 				getLyric(this.id).then(res => {
 					if(res.hasOwnProperty('lrc')){
 						this.$refs.sd.lrc = res.lrc.lyric;
@@ -172,7 +194,7 @@
 				this.isPause=false;
 				this.audio.onloadedmetadata= () => {
 					this.audio.play();
-					
+					this.isErr = false;
 					this.$bus.$emit("openList",this.id,false);
 					this.duration = this.audio.duration;
 					//let m = fenFormat(this.audio.duration)
@@ -315,10 +337,24 @@
 				this.setInfo(this.item);
 				this.playMusic(this.id);
 			})
+			this.$bus.$on('pause', ()=> {
+				if(this.duration ===0) return;
+				this.audio.pause();
+				this.isPause=true;
+				clearInterval(this.timer)
+				this.$refs.sd.isPlay = false;
+				this.$refs.sd.timeStop()
+			})
 			let that = this;
-			this.audio.addEventListener("error", function () {   
-				
-			  that.playNext(this.id);     
+			this.audio.addEventListener("error",() => {   
+				if(that.id === that.getMList[that.getMList.length-1].id){
+					that.$alert("非常遗憾，歌曲已经失效了");
+					this.isPause=true;
+					this.audio.pause();
+					this.isErr = true;
+				}else{
+					that.playNext(that.id);    
+				}
 			});
 		},
 		filters:{
@@ -498,6 +534,13 @@
 		padding-left: 10px;
 		
 	}
+	.m-info{
+		width: 230px;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		height: 24px;
+		white-space: nowrap;
+	}
 	.m-tit2{
 		color: $black2;
 		
@@ -514,6 +557,10 @@
 		bottom: 0;
 		height: 100%;
 	}
-	
+	.collect-wp{
+		position: absolute;
+		left: 320px;
+		top: 20px;
+	}
 	
 </style>

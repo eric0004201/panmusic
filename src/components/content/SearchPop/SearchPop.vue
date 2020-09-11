@@ -8,7 +8,7 @@
 		</div>
 		<div class="search-tit" v-show="getKList.length>0"><i class="el-icon-headset"></i><span>歌单</span></div>
 		<div class="search-list">
-			<div class="search-list-item" v-for="item in getKList">
+			<div class="search-list-item" v-for="item in getKList" @click="toList(item.id)">
 				{{item.name}}
 			</div>
 		</div>
@@ -54,6 +54,15 @@
 				this.$store.commit('addMusic',item);
 				
 				this.$bus.$emit("play",item);
+				
+			},
+			toList(id){
+				this.isShow = false;
+				
+				setTimeout(() => {
+					this.isShow = false;
+				},200)
+				this.$router.push('/musiclist/'+id);
 				
 			}
 		}

@@ -49,29 +49,11 @@
 			MvListItem
 		},
 		mounted() {
-			this.id = this.$route.params.id;
-			
-			this.player = this.$refs.player;
-			
-			getVideo(this.id).then(res => {
-				this.player.src = "//" + res.data.url.split("//")[1];
-			})
-			
-			getVideoInfo(this.id).then(res => {
-				
-				this.info = res.data;
-			})
-			
-			this.getCom();
-			
-			getVideoSimi(this.id).then(res => {
-				this.mvList = res.mvs
-				
-			})
+			this.init()
 		},
 		watch:{
 			$route(to,from){
-					this.$router.go(0)
+					this.init()
 			}
 		},
 		methods:{
@@ -86,6 +68,29 @@
 					this.cnum = res.total;
 					this.comments = res.comments;
 					this.hot = res.hotComments;
+					
+				})
+			},
+			init(){
+				this.id = this.$route.params.id;
+				
+				this.player = this.$refs.player;
+				
+				getVideo(this.id).then(res => {
+					this.player.src = "//" + res.data.url.split("//")[1];
+				})
+				this.player.onplaying = () =>{
+					this.$bus.$emit("pause")
+				}
+				getVideoInfo(this.id).then(res => {
+					
+					this.info = res.data;
+				})
+				
+				this.getCom();
+				
+				getVideoSimi(this.id).then(res => {
+					this.mvList = res.mvs
 					
 				})
 			}

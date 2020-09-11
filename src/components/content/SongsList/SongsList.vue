@@ -69,6 +69,11 @@
 				}
 			}
 		},
+		mounted() {
+			this.$bus.$on("collectClick",() => {
+				this.firstCK = false;
+			})
+		},
 		watch:{
 			cur(){
 				
@@ -87,6 +92,7 @@
 				if(!this.firstCK){
 					this.$store.commit('addMusicList',this.mTableData);
 					this.firstCK = true;
+					this.$bus.$emit("listClick");
 				}
 				this.$bus.$emit("play",val);
 				this.$refs.singleTable.setCurrentRow(this.mTableData[this.cur]);
@@ -147,7 +153,7 @@
 				}else{
 					return val.al.name
 				}
-			},
+			}
 		}
 	}
 </script>

@@ -116,7 +116,7 @@
 	}
 	.back{
 		position: absolute;
-		left: 0;
+		left: 20px;
 		top: 15px;
 		line-height: 30px;
 		font-size: 16px;

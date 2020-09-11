@@ -1,5 +1,6 @@
 <template>
 	<div class="main" id="main" v-loading="loading">
+		<collect class="collect-wp" ref="coll" @collect="collect"></collect>
 		<div class="ml-info-wp" v-if="Object.keys(info).length>1">
 			<div class="ml-img"><img :src="info.coverImgUrl | imageUrl"/></div>
 			<div class="ml-info">
@@ -37,9 +38,10 @@
 <script>
 	import Pagination from 'components/content/Pagination/Pagination.vue'
 	import SongsList from 'components/content/SongsList/SongsList.vue'
+	import Collect from 'components/common/collect/Collect.vue'
 	import Comments from 'components/content/Comments/Comments.vue'
 	import { getListInfo, getListItem, getComments } from 'network/player.js'
-	import { fenFormat, dateFormat } from 'common/utils.js'
+	import { fenFormat, dateFormat, setItem, removeItem, checkCollect } from 'common/utils.js'
 	import { imgSrc } from 'common/mixin.js'
 	
 	export default{
@@ -66,27 +68,16 @@
 		components:{
 			Pagination,
 			Comments,
-			SongsList
+			SongsList,
+			Collect
 		},
-		
+		watch:{
+			$route(to,from){
+					this.init()
+			}
+		},
 		created() {
-			let id = this.$route.params.id;
-			this.id = id;
-			getListInfo(id).then(res => {
-				
-				this.info = res.playlist;
-				this.trackIds = res.playlist.trackIds;
-				
-				this.createList(this.trackIds);
-				this.loading = false;
-			})
-			getComments(id,this.pageSize,0).then(res => {
-				this.comments = res.comments;
-				this.hot = res.hotComments;
-				this.cnum = res.total;
-				this.tabTit = '评论(' + res.total + ')';
-				
-			})
+			this.init()
 		},
 		filters:{
 			dfmt(v){
@@ -94,8 +85,10 @@
 				return dateFormat('YYYY-mm-dd',d)
 			}
 		},
-		mounted() {
 		
+		mounted() {
+			this.$refs.coll.ison = checkCollect(this.id,"songSheet");
+			
 			let that = this;
 			this.$bus.$on('openList',(id) => {
 				this.cur = -1;
@@ -115,12 +108,44 @@
 		},
 		
 		methods:{
+			collect(tf){
+				let obj = {};
+				obj.id = this.id;
+				obj.name = this.info.name;
+				if(tf === true){
+					setItem(obj,"songSheet")
+				}else{
+					removeItem(obj,"songSheet")
+				}
+				this.$bus.$emit("itemChange");
+				
+			},
 			handleClick(){
 				
 			},
 			handleCurrentChange(val) {
 				this.currentRow = val;
 				
+			},
+			init(){
+				let id = this.$route.params.id;
+				
+				this.id = id;
+				getListInfo(id).then(res => {
+					
+					this.info = res.playlist;
+					this.trackIds = res.playlist.trackIds;
+					
+					this.createList(this.trackIds);
+					this.loading = false;
+				})
+				getComments(id,this.pageSize,0).then(res => {
+					this.comments = res.comments;
+					this.hot = res.hotComments;
+					this.cnum = res.total;
+					this.tabTit = '评论(' + res.total + ')';
+					
+				})
 			},
 			createList(ids){
 				let s = ids.map((v, i, a) => {
@@ -130,7 +155,7 @@
 				getListItem(s.toString()).then(res => {
 					
 					this.mTableData = res.songs;
-					
+					this.$refs.songs.firstCK = false;
 				});
 			},
 			
@@ -217,6 +242,7 @@
 		font-size: 16px;
 		cursor: pointer;
 		margin-bottom: 20px;
+		position: relative;
 	}
 	.ml-tips{
 		font-size: 14px;
@@ -241,7 +267,27 @@
 		height: 50px;
 		line-height: 50px;
 	}
-	
-	
+	.collect-wp{
+		position: absolute;
+		left: 243px;
+		top: 47px;
+		color: #222;
+		height: 38px;
+		padding: 4px;
+		border-radius: 50%;
+		line-height: 29px;
+		background: rgba(255,255,255,0.5);
+		animation: circle 10s linear infinite;
+	}
+	@keyframes circle {
+	    0% {   
+				transform: rotate(0deg);
+			
+	    }
+			
+	    100% {    
+				transform: rotate(360deg);
+	    }
+	}
 	
 </style>

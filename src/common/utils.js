@@ -46,3 +46,58 @@ export function randomFrom(lowerValue,upperValue)
 {
  return Math.floor(Math.random() * (upperValue - lowerValue + 1) + lowerValue);
 }
+
+export function setItem(obj,type="collectList"){
+	
+	if(localStorage.getItem(type) === null){
+		obj.isCollect = true;
+		let arr=[]
+		arr.push(obj)
+		localStorage.setItem(type,JSON.stringify(arr))
+		
+	}else{
+		let sc =  JSON.parse(localStorage.getItem(type))
+		
+		let old = sc.find(item=>{
+			return obj.id === item.id;
+		})
+		
+		if(!old){
+			obj.isCollect = true;
+			sc.unshift(obj);
+			localStorage.setItem(type,JSON.stringify(sc))
+		}
+		
+		
+	}
+}
+
+export function removeItem(obj,type="collectList"){
+	if(localStorage.getItem(type) === null){
+	}else{
+		let sc =  JSON.parse(localStorage.getItem(type))
+		let i = sc.findIndex(item =>{
+			return obj.id === item.id
+		})
+		if(i !== -1){
+			sc.splice(i,1)
+			localStorage.setItem(type,JSON.stringify(sc))
+		}
+	}
+}
+
+export function checkCollect(id,type="collectList"){
+	if(localStorage.getItem(type) !== null){
+		let sc =  JSON.parse(localStorage.getItem(type))
+		let i = sc.findIndex(item =>{
+			return id === item.id
+		})
+		
+		if(i !== -1){
+			return true
+		}else{
+			return false
+		}
+	}
+}
+
