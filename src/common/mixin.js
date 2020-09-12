@@ -48,8 +48,10 @@ export const collectSongLength = {
 	methods:{
 		collectSongLength(type = 'collectList'){
 			if(localStorage.getItem(type) !== null){
-				let sc =  JSON.parse(localStorage.getItem(type));
-				return sc.length
+				let sc =  JSON.parse(localStorage.getItem(type)) || [];
+				return sc.length;
+			}else{
+				return 0;
 			}
 			
 		}
@@ -60,8 +62,11 @@ export const collectSong = {
 	methods:{
 		collectSong(type = 'collectList'){
 			if(localStorage.getItem(type) !== null){
-				let sc =  JSON.parse(localStorage.getItem(type));
+				let sc =  JSON.parse(localStorage.getItem(type)) || [];
+				
 				return sc;
+			}else{
+				return []
 			}
 			
 		}

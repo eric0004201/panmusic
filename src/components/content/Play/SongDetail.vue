@@ -55,12 +55,13 @@
 				pageSize:20,
 				page:0,
 				lrcfmt:[],
-				curTime:0,
+				curTime:999,
 				duration:10,
 				curT:0,
 				timer:null,
 				pheight:30,
 				lrc:''
+				
 			}
 		},
 		created() {
@@ -70,6 +71,8 @@
 		watch:{
 			lrc(){
 				this.getComment();
+				this.ph = 0;
+				this.$refs.sw.scrollTop = 0;
 			}
 		},
 		components:{
@@ -165,18 +168,32 @@
 				}
 			},
 			timePlay(){
+				
+				
 				this.timer = setInterval(() => {
-					
-					
 					for(let i=0; i<this.lrcfmt.length; i++){
 						if(this.curTime>=this.lrcfmt[i].time && this.curTime<this.lrcfmt[i+1].time){
-							this.curT = i;
-							if(i<7){
+							if(i < 7){
+								
 								this.$refs.lyn.style.marginTop = 0;
 							}else if(i>=7 && i<this.lrcfmt.length-7){
+							
+								let hh = 0;
+								for(let j = 0; j < i-7; j++){
+									hh += document.querySelectorAll(".lyc-in p")[j].offsetHeight;
+								}
 								
-								this.$refs.lyn.style.marginTop = -(i-7) * this.pheight + "px";
+								this.$refs.lyn.style.marginTop = (-hh) + "px";
+								
+							}else{
+								let hh = 0;
+								for(let j = 0; j < this.lrcfmt.length-14; j++){
+									hh += document.querySelectorAll(".lyc-in p")[j].offsetHeight;
+								}
+								this.$refs.lyn.style.marginTop = (-hh) + "px";
 							}
+							this.curT = i;
+							
 						}
 					}
 					
@@ -187,7 +204,10 @@
 				},200)
 			},
 			timeStop(){
-				clearInterval(this.timer)
+				if(this.timer !== null){
+					clearInterval(this.timer)
+				}
+				
 			}
 		}
 	}
@@ -303,7 +323,7 @@
 		height: 458px;
 		overflow: hidden;
 		margin: 40px 0;
-		margin-left: 20px;
+		padding-left: 20px;
 	}
 	.lyc-in{
 		
@@ -312,8 +332,7 @@
 		font-size: 15px;
 		color: $black3;
 		line-height: 30px;
-		
-		white-space: nowrap;
+		padding-right: 100px;
 	}
 	.lyc-in p.on{
 		font-weight: bold;

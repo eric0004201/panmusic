@@ -120,7 +120,7 @@
 			toList(id){
 				this.isShow = false;
 				this.$router.push('/musiclist/'+id);
-				
+				this.$bus.$emit("toSheet")
 			},
 			handleCurrentChange(val) {
 				this.currentRow = val;
@@ -166,6 +166,8 @@
 			this.$bus.$on('itemChange', ()=> {
 				this.collectLength = this.collectSongLength();
 				this.collectSongs = this.collectSong();
+				this.sheetLength = this.collectSongLength("songSheet"),
+				this.sheetSongs = this.collectSong("songSheet")
 				
 			});
 			this.$bus.$on("listClick",() => {
@@ -188,6 +190,7 @@
 					}
 				})
 				let num2;
+				
 				this.collectSongs.findIndex(function(value, index, arr) {
 					if(id === value.id) {
 						num2 = index

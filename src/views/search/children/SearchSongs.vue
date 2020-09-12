@@ -1,5 +1,5 @@
 <template>
-	<div class="search-songs">
+	<div class="search-songs" v-loading="isLoading">
 		<el-table
 		    ref="singleTable"
 		    :data="tableData"
@@ -64,7 +64,8 @@
 				firstCK:false,
 				cur:0,
 				currentRow: null,
-				cnum:0
+				cnum:0,
+				isLoading:true
 			}
 		},
 		components:{
@@ -112,6 +113,7 @@
 					this.tableData = res.result.songs;
 					this.cnum = res.result.songCount;
 					this.$bus.$emit("all",this.cnum);
+					this.isLoading = false;
 				})
 			},
 			playSong(val){

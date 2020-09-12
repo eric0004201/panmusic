@@ -128,6 +128,7 @@
 				
 			},
 			init(){
+				this.loading = true;
 				let id = this.$route.params.id;
 				
 				this.id = id;
@@ -137,7 +138,7 @@
 					this.trackIds = res.playlist.trackIds;
 					
 					this.createList(this.trackIds);
-					this.loading = false;
+					
 				})
 				getComments(id,this.pageSize,0).then(res => {
 					this.comments = res.comments;
@@ -156,6 +157,7 @@
 					
 					this.mTableData = res.songs;
 					this.$refs.songs.firstCK = false;
+					this.loading = false;
 				});
 			},
 			
@@ -276,7 +278,7 @@
 		padding: 4px;
 		border-radius: 50%;
 		line-height: 29px;
-		background: rgba(255,255,255,0.5);
+		background: rgba(255,255,255,0.7);
 		animation: circle 10s linear infinite;
 	}
 	@keyframes circle {

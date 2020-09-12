@@ -172,6 +172,7 @@
 				
 			},
 			playMusic(id){
+				
 				this.id = id;
 				
 				this.$refs.col.ison = checkCollect(id);
@@ -193,6 +194,7 @@
 				
 				this.isPause=false;
 				this.audio.onloadedmetadata= () => {
+					this.$refs.sd.timeStop();
 					this.audio.play();
 					this.isErr = false;
 					this.$bus.$emit("openList",this.id,false);
@@ -325,6 +327,11 @@
 			},
 			closed(){
 				this.openDetail = false;
+				
+				if(this.$refs.sd !== undefined){
+					this.$refs.sd.isPlay = false;
+					this.$refs.sd.timeStop()
+				}
 			}
 			
 		},
@@ -337,6 +344,15 @@
 				this.setInfo(this.item);
 				this.playMusic(this.id);
 			})
+			
+			this.$bus.$on('toSheet', ()=> {
+				
+				this.closed()
+				
+				
+				
+			})
+			
 			this.$bus.$on('pause', ()=> {
 				if(this.duration ===0) return;
 				this.audio.pause();
