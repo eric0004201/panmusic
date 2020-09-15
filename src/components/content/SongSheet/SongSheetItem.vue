@@ -53,6 +53,7 @@
 	.song-item{
 		width: 19%;
 		@include list-item;
+		@include mediaWidth;
 	}
 	.img{
 		width: 100%;

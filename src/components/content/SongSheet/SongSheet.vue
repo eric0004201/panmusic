@@ -38,5 +38,6 @@
 	}
 	.song-list i{
 		width: 19%;
+		@include mediaWidth;
 	}
 </style>

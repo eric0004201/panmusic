@@ -54,6 +54,17 @@ $navActiveColor:#d33a31;
 	line-height: 34px;
 	opacity: 0;
 }
+@mixin mediaWidth {
+	@media screen and (max-width: 1400px) {
+		width: 24%;
+	} 
+	
+	@media screen and (max-width: 1000px) { 
+		width: 32%;
+	}
+	
+}
+
 ::-webkit-scrollbar {
  
   width : 6px; 

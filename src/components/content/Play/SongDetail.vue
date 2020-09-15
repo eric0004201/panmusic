@@ -281,6 +281,7 @@
 		cursor: pointer;
 		text-align: center;
 		font-size: 22px;
+		z-index: 2;
 	}
 	.down:hover{
 		background: #eee;

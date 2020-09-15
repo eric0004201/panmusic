@@ -130,7 +130,7 @@
 					this.$refs.sd.timeStop()
 				}else{
 					this.$refs.sd.isPlay = true;
-					
+					this.$refs.sd.timePlay()
 				}
 				this.$refs.sd.isd = true;
 				
