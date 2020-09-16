@@ -158,6 +158,9 @@
 					this.mTableData = res.songs;
 					this.$refs.songs.firstCK = false;
 					this.loading = false;
+				}).catch(err => {
+					this.$alert("服务器繁忙！")
+					this.loading = false;
 				});
 			},
 			

@@ -43,7 +43,7 @@
 	}
 </script>
 <style scoped="scoped">
-	@import url("~assets/css/reset.css");
+	
 	.main-wrap{
 		position: fixed;
 		left: 0;
@@ -93,7 +93,10 @@
 		transform: rotateY(90deg);
 		z-index: 1;
 	}
-	
+</style>
+
+<style>
+	@import url("~assets/css/reset.css");
 	@media screen and (max-width: 960px) {
 			#app{
 				position: absolute;
