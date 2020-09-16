@@ -1,6 +1,6 @@
 <template>
 	<div class="mv-list">
-		<mv-list-item v-for="item in mvList" :obj="item" :key="item.name"></mv-list-item>
+		<mv-list-item v-for="item in mvList" :obj="item" :key="item.id"></mv-list-item>
 		<i></i><i></i><i></i><i></i>
 	</div>
 </template>

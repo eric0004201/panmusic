@@ -101,3 +101,6 @@ export function checkCollect(id,type="collectList"){
 	}
 }
 
+export function setNav(nav){
+	localStorage.setItem("navCollapse",nav);
+}

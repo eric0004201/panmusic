@@ -21,7 +21,9 @@ import {
 	TableColumn,
 	Tabs,
 	TabPane,
-	Pagination
+	Pagination,
+	Menu,
+	MenuItem
 } from 'element-ui';
 
 Vue.use(Loading.directive);
@@ -38,6 +40,8 @@ Vue.use(TableColumn)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Pagination)
+Vue.use(Menu)
+Vue.use(MenuItem)
 
 Vue.use(VueLazyload, {
   error: require('assets/images/timg.jpg'),

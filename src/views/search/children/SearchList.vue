@@ -1,5 +1,5 @@
 <template>
-	<div class="slist">
+	<div class="slist" v-loading="isLoading">
 		<song-sheet :songs="playList"></song-sheet>
 		<div class="pg">
 			<pagination ref='page' :pageSize='pageSize' :total="cnum" @goPage='goPage'></pagination>
@@ -24,7 +24,8 @@
 				page:0,
 				key:'',
 				playList:[],
-				cnum:0
+				cnum:0,
+				isLoading:true
 			}
 		},
 		created() {
@@ -42,6 +43,7 @@
 					this.playList = res.result.playlists
 					this.cnum = res.result.playlistCount
 					this.$bus.$emit("all",this.cnum);
+					this.isLoading = false;
 				})
 			},
 			goPage(val){

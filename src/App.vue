@@ -1,12 +1,19 @@
 <template>
   <div id="app">
 		<top-bar></top-bar>
-		<left-nav-bar v-show="showmt"></left-nav-bar>
+		<div class="main-wrap">
+			<left-nav-bar v-show="showmt"></left-nav-bar>
+			<div class="ami-wrap">
+				<transition>
+					<keep-alive exclude="MusicList,Video,Search">
+						<router-view/>
+					</keep-alive>
+				</transition>
+			</div>
+		</div>
 		<play></play>
 		<play-list></play-list>
-		<keep-alive exclude="MusicList,Video,Search">
-			<router-view/>
-		</keep-alive>
+		
     
   </div>
 </template>
@@ -35,8 +42,58 @@
 		}
 	}
 </script>
-<style>
+<style scoped="scoped">
 	@import url("~assets/css/reset.css");
+	.main-wrap{
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 60px;
+		bottom: 70px;
+		display: flex;
+		
+	}
+	.ami-wrap{
+		perspective: 2200px;
+		transform-style: preserve-3d;
+		flex: 1;
+		overflow: hidden;
+		position: relative;
+	}
+	#app .v-enter-active,#app .v-leave-active{
+		
+		transition: all 0.3s linear;
+		transform-origin: center center; 
+		left: 0;
+		right: 0;
+		top: 0px;
+		bottom: 0px;
+	}
+	#app .v-enter-active{
+		transition-delay:0.3s ;
+	}
+	#app .v-leave-active{
+		z-index: 2;
+	}
+	.v-enter{
+		opacity: 0;
+		transform: rotateY(-90deg);
+		
+		
+	}
+	.v-enter-to{
+		opacity: 1;
+		transform: rotateY(0deg);
+	}
+	.v-leave{
+		
+		transform: rotateY(0deg);
+	}
+	.v-leave-to{
+		transform: rotateY(90deg);
+		z-index: 1;
+	}
+	
 	@media screen and (max-width: 960px) {
 			#app{
 				position: absolute;

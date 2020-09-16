@@ -1,5 +1,5 @@
 <template>
-	<div class="res-mv">
+	<div class="res-mv" v-loading="isLoading">
 		<mv-list :mv-list="mvList"></mv-list>
 		<div class="pg">
 			<pagination ref='page' :pageSize='pageSize' :total="cnum" @goPage='goPage'></pagination>
@@ -25,7 +25,8 @@
 				page:0,
 				key:'',
 				cnum:0,
-				mvList:[]
+				mvList:[],
+				isLoading:true
 			}
 		},
 		created() {
@@ -43,6 +44,7 @@
 					this.mvList = res.result.mvs;
 					this.cnum = res.result.mvCount;
 					this.$bus.$emit("all",this.cnum);
+					this.isLoading = false;
 				})
 			},
 			goPage(val){
