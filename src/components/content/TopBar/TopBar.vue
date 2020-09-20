@@ -1,7 +1,8 @@
 <template>
 	<div class="top-bar">
 		
-		<div class="tit">{{getTitle}} 
+		<div class="tit amt">
+			<span>{{getTitle}} </span>
 			<div v-if="showBack" class="back" @click="back()"><i class="el-icon-arrow-left"></i></div>
 		</div>
 		<div class="search" @click="showPop">
@@ -11,7 +12,7 @@
 			    placeholder="请输入内容"
 			    prefix-icon="el-icon-search"
 					@input="getValue"
-					
+					maxlength = "37"
 					@keyup.enter.native="goValue"
 			    v-model.trim ="input">
 			  </el-input>
@@ -31,7 +32,8 @@
 		data(){
 			return {
 				input:"",
-				getValue:null
+				getValue:null,
+				bgon:false
 			}
 		},
 		computed:{
@@ -69,7 +71,17 @@
 			goValue(){
 				this.$refs.spop.isShow = false;
 				this.$refs.input.blur()
-				this.$router.push('/search/'+this.input + '/songs')
+				let str= this.input.replace(/[\-\_\,\/\!\|\~\`\(\)\#\$\%\^\&\*\{\}\:\;\"\L\<\>\?]/g, '');
+				this.input = str;
+				if(!str) {
+					this.$message({
+						message: '请不要输入特殊字符！',
+						type: 'warning'
+					});
+					this.input = "";
+					return
+				}
+				this.$router.push('/search/'+str + '/songs')
 			},
 			showPop(){
 				this.$bus.$emit("search");
@@ -83,16 +95,32 @@
 			this.getValue = () => {
 				getK()
 			}
+			this.$bus.$on("play",() => {
+				this.bgon = true;
+			})
+			this.$bus.$on("goplay",() => {
+				this.bgon = true;
+			})
+			
+			this.$bus.$on("pause",() => {
+				this.bgon = false;
+			})
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.top-bar{
-		
 		height: 60px;
-		
 		background: $bgTop;
+		perspective: 500px;
+		
+		position: relative;
+		z-index: 2;
+		perspective-origin: right;
+	}
+	.bgon .top-bar{
+		background:none;
 	}
 	.tit{
 		position: relative;
@@ -101,9 +129,10 @@
 		font-size: $fs18;
 		line-height: 60px;
 		text-align: center;
-		
-		
+		overflow: hidden;
 	}
+	
+	
 	.search{
 		position: absolute;
 		right: 30px;

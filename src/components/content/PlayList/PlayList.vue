@@ -107,7 +107,7 @@
 				currentRow: null,
 				isShow:false,
 				activeName: 'first',
-				getHeight:document.documentElement.clientHeight-133,
+				getHeight:window.innerHeight - 130,
 				firstCK:false,
 				collectLength:this.collectSongLength(),
 				collectSongs:this.collectSong(),
@@ -121,6 +121,10 @@
 				this.isShow = false;
 				this.$router.push('/musiclist/'+id);
 				this.$bus.$emit("toSheet")
+				setTimeout(() => {
+					this.$bus.$emit("searchHide");
+				},100)
+			
 			},
 			handleCurrentChange(val) {
 				this.currentRow = val;
@@ -163,6 +167,7 @@
 			}
 		},
 		mounted() {
+			
 			this.$bus.$on('itemChange', ()=> {
 				this.collectLength = this.collectSongLength();
 				this.collectSongs = this.collectSong();
@@ -175,7 +180,7 @@
 			})
 			
 			window.onresize = () => {
-				this.getHeight = document.documentElement.clientHeight-133;
+				this.getHeight = window.innerHeight - 130;
 			}
 			
 			this.$bus.$on('openList',(id,b) => {
@@ -240,7 +245,9 @@
 		cursor: pointer;
 		z-index: 10;
 	}
-	
+	.bgon .close{
+		color: #333;
+	}
 	.sin{
 		transform: scale(1) translateY(0);
 		filter:blur(0px);
@@ -248,16 +255,26 @@
 	}
 	.ptit ::v-deep .el-tabs__content{
 		position: absolute;
-		top: 64px;
+		top: 60px;
 		bottom: 0;
 		left: 0;
 		right: 0;
 		overflow: hidden;
 	}
+	.ptit ::v-deep .el-tabs__item{
+		color: #303133;
+	}
 	.ptit ::v-deep .el-tabs__item.is-active{
 		color: $navActiveColor;
 	}
 	.ptit ::v-deep .el-tabs__item:hover{
+		color: $navActiveColor;
+	}
+	.bgon .ptit ::v-deep .el-tabs__item.is-active{
+		color: $navActiveColor;
+		
+	}
+	.bgon .ptit ::v-deep .el-tabs__item:hover{
 		color: $navActiveColor;
 	}
 	.ptit ::v-deep .el-tabs__active-bar{
@@ -275,7 +292,7 @@
 	  height: 2px;
 	  }
 	.ptit ::v-deep .el-table__body-wrapper::-webkit-scrollbar-thumb {
-	  /*滚动条里面小方块*/
+	 
 	  border-radius   : 6px;
 	  background-color: skyblue;
 	  background-image: -webkit-linear-gradient(
@@ -290,13 +307,21 @@
 	  );
 	  }
 	.ptit ::v-deep .el-table__body-wrapper::-webkit-scrollbar-track {
-	  /*滚动条里面轨道*/
+	  
 	  box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
 	  background   : #ededed;
 	  border-radius: 10px;
 	}
 	.ptit ::v-deep #tab-first{
 		padding-left: 20px;
+	}
+	.search-list{
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		overflow: auto;
 	}
 	.search-list-item{
 		line-height: 40px;
@@ -313,5 +338,26 @@
 	.search-list-item:hover{
 		
 		background: #f5f7fa;
+	}
+	.bgon .play-list ::v-deep .el-table{
+		background: #b58383;
+	}
+	.bgon .play-list ::v-deep .el-table tr,.bgon .play-list ::v-deep .el-table th{
+		background: #b58383;
+	}
+	.bgon .play-list ::v-deep .el-table tr:hover td{
+		background: #b3b3b3;
+	}
+	.bgon .play-list ::v-deep .el-table__body tr.current-row>td{
+		background-color: #a4abb3;
+	}
+	.bgon .search-list{
+		background: #b58383;
+	}
+	.bgon .search-list-item:hover{
+		background: #b3b3b3;
+	}
+	.bgon .play-list{
+		
 	}
 </style>

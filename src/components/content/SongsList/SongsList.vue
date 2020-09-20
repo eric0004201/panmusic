@@ -164,4 +164,17 @@
 		height: 75px;
 		vertical-align: middle;
 	}
+	.bgon .slist ::v-deep .el-table{
+		background: none;
+	}
+	.bgon .slist ::v-deep .el-table tr,.bgon .slist ::v-deep .el-table th{
+		background: none;
+	}
+	.bgon .slist ::v-deep .el-table tr:hover td{
+		background: #b3b3b3;
+		cursor: pointer;
+	}
+	.bgon .slist ::v-deep .el-table__body tr.current-row>td{
+		background-color: #a4abb3;
+	}
 </style>

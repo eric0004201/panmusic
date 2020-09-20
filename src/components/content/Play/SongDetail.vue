@@ -1,5 +1,8 @@
 <template>
 	<div class="song-wrap" ref="sw">
+		<div class="bgv amt" :class="{bgon:isPlay}">
+			<img class="amt" :src="imgSrc">
+		</div>
 		<div class="song-detail">
 			<div class="shead">
 				<div v-show="isd" class="down" @click="closed"><i class="el-icon-arrow-down"></i></div>
@@ -10,7 +13,7 @@
 						<img :src="imgSrc">
 					</div>
 				</div>
-				<div class="lyric">
+				<div class="lyric amt" :class="{lyon:isPlay}">
 					<div class="tit">{{name}}</div>
 					<div class="wd">歌手：<span>{{aName}}</span></div>
 					<div class="lyric-wp" v-show='lrc.indexOf("[") > -1'>
@@ -40,6 +43,7 @@
 <script>
 	import Comments from 'components/content/Comments/Comments.vue'
 	import Pagination from 'components/content/Pagination/Pagination.vue'
+	import CanvasBg from 'components/common/canvasBg/CanvasBg.vue'
 	import { getMusicComment } from 'network/find.js'
 	
 	
@@ -77,7 +81,8 @@
 		},
 		components:{
 			Comments,
-			Pagination
+			Pagination,
+			CanvasBg
 		},
 		props:{
 			id:{
@@ -167,48 +172,34 @@
 					this.lrcfmt = arr;
 				}
 			},
-			timePlay(){
-				
-				
-				this.timer = setInterval(() => {
-					for(let i=0; i<this.lrcfmt.length; i++){
-						if(this.curTime>=this.lrcfmt[i].time && this.curTime<this.lrcfmt[i+1].time){
-							if(i < 7){
-								
-								this.$refs.lyn.style.marginTop = 0;
-							}else if(i>=7 && i<this.lrcfmt.length-7){
+			lycPlay(){
+				for(let i=0; i<this.lrcfmt.length; i++){
+					if(this.curTime>=this.lrcfmt[i].time && this.curTime<this.lrcfmt[i+1].time){
+						if(i < 7){
 							
-								let hh = 0;
-								for(let j = 0; j < i-7; j++){
-									hh += document.querySelectorAll(".lyc-in p")[j].offsetHeight;
-								}
-								
-								this.$refs.lyn.style.marginTop = (-hh) + "px";
-								
-							}else{
-								let hh = 0;
-								for(let j = 0; j < this.lrcfmt.length-14; j++){
-									hh += document.querySelectorAll(".lyc-in p")[j].offsetHeight;
-								}
-								this.$refs.lyn.style.marginTop = (-hh) + "px";
+							this.$refs.lyn.style.marginTop = 0;
+						}else if(i>=7 && i<this.lrcfmt.length-7){
+						
+							let hh = 0;
+							for(let j = 0; j < i-7; j++){
+								hh += document.querySelectorAll(".lyc-in p")[j].offsetHeight;
 							}
-							this.curT = i;
 							
+							this.$refs.lyn.style.marginTop = (-hh) + "px";
+							
+						}else{
+							let hh = 0;
+							for(let j = 0; j < this.lrcfmt.length-14; j++){
+								hh += document.querySelectorAll(".lyc-in p")[j].offsetHeight;
+							}
+							this.$refs.lyn.style.marginTop = (-hh) + "px";
 						}
+						this.curT = i;
+						
 					}
-					
-					if(this.curTime>=this.duration){
-						clearInterval(this.timer)
-					}
-					
-				},200)
-			},
-			timeStop(){
-				if(this.timer !== null){
-					clearInterval(this.timer)
 				}
-				
 			}
+			
 		}
 	}
 </script>
@@ -221,8 +212,22 @@
 		top: 0;
 		bottom: 70px;
 		overflow: auto;
+		background: #fff;
+	}
+	.bgv{
+		position: absolute;
+		left: 0;
+		right: 0;
+		width: 100%;
+		top: 0;
+		height: 678px;
+		overflow: hidden;
+		opacity: 0;
+		
+		
 	}
 	.song-detail{
+		position: relative;
 		width: 1200px;
 		margin: 0 auto;
 	}
@@ -282,9 +287,13 @@
 		text-align: center;
 		font-size: 22px;
 		z-index: 2;
+		background: rgba(255,255,255,0.6);
 	}
 	.down:hover{
 		background: #eee;
+	}
+	.bgon .down{
+		color: #111010;
 	}
 	.pan.on{
 		animation: go 15s linear infinite;
@@ -302,18 +311,21 @@
 	}
 	.lyric{
 		width: 600px;
-		margin-top: 100px;
+		margin-top: 60px;
+		padding-bottom: 20px;
+		margin-bottom: 20px;
 	}
 	.tit{
 		font-size: 26px;
 		padding-left: 20px;
+		padding-top: 15px;
 	}
 	.wd{
 		margin-top: 15px;
 		font-size: 14px;
 		padding-left: 20px;
 		span{
-			color: #517eaf;
+		
 		}
 	}
 	
@@ -323,7 +335,7 @@
 	.lyric-wp{
 		height: 458px;
 		overflow: hidden;
-		margin: 40px 0;
+		margin-top: 20px;
 		padding-left: 20px;
 	}
 	.lyc-in{
@@ -337,7 +349,7 @@
 	}
 	.lyc-in p.on{
 		font-weight: bold;
-		color: $black1;
+		color: $black1;;
 		animation: lyc 0.6s ease-out 1;
 		transform-origin:left center;
 		animation-fill-mode:forwards;
@@ -349,20 +361,20 @@
 	@keyframes lyc {
 	    0% {   
 				
-				color: #fff;
+				color:$navActiveColor;
 				letter-spacing: 1.3;
 	      transform: scale(0.8); 
 				opacity:0.5;
 				filter: blur(3px);
 	    }
 			60%{
-			  color:$navActiveColor;        
+			       
 				filter: blur(0);		 
 				transform: scale(1.23); 
 			} 
 	    100% {    
 				letter-spacing: 1;
-				color: $black1;
+				
 	      transform:  scale(1.15); 
 				opacity:1;
 				
@@ -373,4 +385,64 @@
 		font-size: 15px;
 		color: $black3;
 	}
+	.lyric{
+		
+		height: 587px;
+		
+		border-radius: 8px;
+	}
+	.bgon{
+		opacity: 1;
+	}
+	.lyon{
+		background: rgba(0, 0, 0, 0.4);
+		color: #ede8e8;
+	}
+	.lyon p.on{
+		color: #ede8e8;
+	}
+	.bgv img{
+		width: 140%;
+		filter: blur(60px);
+		opacity: 0.6;
+		animation:gobg 33.6s linear infinite;
+		position: absolute;
+	}
+	@keyframes gobg {
+	    0% {   /*0%*/
+				left:-40%;
+				top:-40%;
+	      filter: blur(50px) brightness(50%);
+				transform: scale(1);
+	    }
+	    25% {    /*100%*/
+				left:0;
+				top:-20%;
+	      filter: blur(80px) brightness(120%);
+				transform: scale(1.4);
+	    }
+			50%{
+				left:0;
+				top:0;
+				filter: blur(90px) brightness(120%);
+				transform: scale(1.1);
+			}
+			75%{
+				left:-30%;
+				top:0;
+				filter: blur(80px) brightness(120%);
+				transform: scale(1.2);
+			}
+			100%{
+				left:-40%;
+				top:-40%;
+				filter: blur(50px) brightness(50%);
+				transform: scale(1);
+			}
+	}
+	.bgon .song-wrap{
+		background:#afafac;
+	}
+	
+	
 </style>

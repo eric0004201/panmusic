@@ -147,6 +147,7 @@
 					this.tabTit = '评论(' + res.total + ')';
 					
 				})
+				
 			},
 			createList(ids){
 				let s = ids.map((v, i, a) => {
@@ -183,7 +184,7 @@
 				
 			},
 			playAll(){
-				this.playSong(this.mTableData[0]);
+				this.$refs.songs.playSong(this.mTableData[0]);
 			},
 			imgDone(){
 				this.loading = false;

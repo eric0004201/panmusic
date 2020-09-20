@@ -153,4 +153,17 @@
 	.pg{
 		padding-top: 30px;
 	}
+	.bgon .search-songs ::v-deep .el-table{
+		background: none;
+	}
+	.bgon .search-songs ::v-deep .el-table tr,.bgon .search-songs ::v-deep .el-table th{
+		background: none;
+	}
+	.bgon .search-songs ::v-deep .el-table tr:hover td{
+		background: #b3b3b3;
+		cursor: pointer;
+	}
+	.bgon .search-songs ::v-deep .el-table__body tr.current-row>td{
+		background-color: #a4abb3;
+	}
 </style>

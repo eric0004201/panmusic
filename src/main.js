@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueLazyload from 'vue-lazyload'
-
+import animated from 'animate.css' 
 import 'element-ui/lib/theme-chalk/index.css';
 import {
 	Loading,
@@ -26,6 +26,7 @@ import {
 	MenuItem
 } from 'element-ui';
 
+Vue.use(animated)
 Vue.use(Loading.directive);
 
 Vue.use(Button)

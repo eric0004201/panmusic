@@ -1,6 +1,9 @@
 <template>
 	<div class="song-list">
-		<song-sheet-item @imgLoad="imgDone" v-for="(item,index) in songs" :obj="item" :key="index"></song-sheet-item>
+		<div class="item-wp" v-for="(item,index) in songs" :key="index">
+			<song-sheet-item @imgLoad="imgDone"  :obj="item" ></song-sheet-item>
+		</div>
+		
 		<i></i><i></i><i></i><i></i><i></i>
 	</div>
 </template>
@@ -35,6 +38,10 @@
 <style lang="scss" scoped>
 	.song-list{
 		@include mlist
+	}
+	.item-wp{
+		width: 19%;
+		@include mediaWidth;
 	}
 	.song-list i{
 		width: 19%;

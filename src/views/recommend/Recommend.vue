@@ -1,8 +1,8 @@
 <template>
-	<div class="main" ref='main'>
+	<div class="main" ref='main' @scroll="mscroll">
 		<div class="main-in">
-			<div class="head" v-if="Object.keys(headCon).length>0">
-				<div class="hbg"><img :src="headCon.coverImgUrl | imageUrl"/></div>
+			<div class="head" ref="hd" v-if="Object.keys(headCon).length>0">
+				<div class="hbg"><img @load="hload" :src="headCon.coverImgUrl | imageUrl"/></div>
 				<div class="hcon">
 					<div class="img"><img :src="headCon.coverImgUrl | imageUrl "/></div>
 					<div class="info">
@@ -15,7 +15,7 @@
 			</div>
 			<tags class="tags" :tags="tags" @tagClick="tagClick"></tags>
 			<div>
-				<song-sheet :songs="playList" @imgDone="imgDone"></song-sheet>
+				<recom-sheet ref="rec" :songs="playList" @imgDone="imgDone"></recom-sheet>
 			</div>
 			<div>
 				<pagination ref='page' :pageSize='pageSize' :total="cnum" @goPage='goPage'></pagination>
@@ -26,22 +26,23 @@
 
 <script>
 	import Pagination from 'components/content/Pagination/Pagination.vue'
-	import SongSheet from 'components/content/SongSheet/SongSheet.vue'
+	import RecomSheet from 'components/content/SongSheet/RecomSheet.vue'
 	import Tags from 'components/content/Tags/Tags.vue'
 	import { getListHead, getListCon } from 'network/find.js'
 	import { imgSrc } from 'common/mixin.js'
+	import { throttle } from 'common/utils.js'
 	
 	export default{
 		name:"Recommend",
 		components:{
-			SongSheet,
+			RecomSheet,
 			Pagination,
 			Tags
 		},
 		mixins:[imgSrc],
 		data(){
 			return {
-				pageSize:50,
+				pageSize:60,
 				tag:'全部',
 				headCon:{},
 				playList:[],
@@ -50,9 +51,12 @@
 				curTag:0,
 				cnum:0,
 				loading:true,
-				loadNum:0
-				
-				
+				loadNum:0,
+				mscroll:() => {},
+				headHeight:200,
+				itemHeight:100,
+				hang:0,
+				curIndex:0
 			}
 		},
 		created() {
@@ -61,17 +65,29 @@
 				
 				this.headCon = res.playlists[0]
 				this.headId = res.playlists[0].id
+				
 			})
 			getListCon(this.pageSize, 0, this.tag).then(res => {
 				
 				this.playList = res.playlists
 				this.loading = false
+				this.hang =Math.ceil(this.playList.length/3);
+				
 			})
+		},
+		mounted() {
+			this.mscroll = throttle(this.msc,100);
+			
+			
 		},
 		
 		methods:{
 			goM(){
 				this.$router.push('/musiclist/'+this.headId)
+			},
+			hload(){
+				this.headHeight = this.$refs.hd.offsetHeight +70;
+				
 			},
 			tagClick(tag){
 				
@@ -88,6 +104,7 @@
 				getListCon(this.pageSize, 0, tag).then(res => {
 					this.loading = false
 					this.playList = res.playlists
+					this.hang =Math.ceil(this.playList.length/3);
 					if(tag === '全部'){
 						this.cnum = 0;
 					}else{
@@ -112,14 +129,29 @@
 					this.$refs.main.scrollTop = 260;
 				})
 			},
-			imgDone(){
+			imgDone(h){
 				// this.loadNum++;
 				
 				// if(this.loadNum>=this.playList.length){
 				// 	this.loading = false
 				// }
+				this.itemHeight = h;
+				this.$refs.rec.setIndex(3);
 				
-				
+			},
+			msc(){
+				var scrollTop = this.$el.scrollTop;
+				this.headHeight = this.$refs.hd.offsetHeight +70;
+				for(let i=0; i<this.hang; i++){
+					if(scrollTop>this.headHeight+i*this.itemHeight-600 && scrollTop<=this.headHeight+(i+1)*this.itemHeight-600){
+						this.curIndex = (i+1)*3
+						
+						this.$refs.rec.setIndex(this.curIndex);
+					}
+				}
+				if(scrollTop<100){
+					this.$refs.rec.setIndex(3);
+				}
 			}
 		}
 		
@@ -180,6 +212,11 @@
 	.tit3{
 		font-size: 14px;
 		color: $black3;
+		overflow: hidden;
+		height: 76px;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 4;
 	}
 	.tags{
 		margin-top: 20px;

@@ -67,6 +67,9 @@
 	.new-item:hover{
 		background: $navHoverBg;
 	}
+	.bgon .new-item:hover{
+		background: #b3b3b3;
+	}
 	.img img{
 		height: 76px;
 	}

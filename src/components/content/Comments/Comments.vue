@@ -139,4 +139,7 @@
 			color: $black2;
 		}
 	}
+	.bgon .cinfo .cwd2{
+		background: #a8ad92;
+	}
 </style>

@@ -49,4 +49,13 @@
 		text-align: right;
 		padding-bottom: 30px;
 	}
+	.bgon .page ::v-deep .el-pagination button:disabled{
+		background: none;
+	}
+	.bgon .page ::v-deep .el-pagination .btn-next,.bgon .page ::v-deep .el-pagination .btn-prev{
+		background: none;
+	}
+	.bgon .page ::v-deep .el-pager li{
+		background: none;
+	}
 </style>

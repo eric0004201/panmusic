@@ -8,7 +8,7 @@
 									:img="album.blurPicUrl" 
 									@closed="closed">
 		</song-detail>
-		<div class="play">
+		<div class="play amt">
 			<div class="play-bar">
 				<el-slider v-model="curDur"
 									 :show-tooltip="false"
@@ -68,6 +68,7 @@
 	import { fenFormat, randomFrom, setItem, removeItem, checkCollect } from 'common/utils.js'
 	import { getPlayInfo, getLyric } from 'network/player.js'
 	import { songInfo } from 'common/mixin.js'
+	import { addClass, removeClass } from 'common/utils.js'
 	
 	export default{
 		name:"Play",
@@ -99,7 +100,9 @@
 				loop:false,
 				openDetail:false,
 				lrc:'',
-				isErr:false
+				isErr:false,
+				bgon:false,
+				body:null
 			}
 		},
 		methods:{
@@ -127,10 +130,10 @@
 				this.openDetail = true;
 				if(this.isPause === true){
 					this.$refs.sd.isPlay = false;
-					this.$refs.sd.timeStop()
+					
 				}else{
 					this.$refs.sd.isPlay = true;
-					this.$refs.sd.timePlay()
+					
 				}
 				this.$refs.sd.isd = true;
 				
@@ -157,16 +160,18 @@
 				this.isPause=!this.isPause;
 				if(this.isPause){
 					this.audio.pause();
-					clearInterval(this.timer)
 					this.$refs.sd.isPlay = false;
-					this.$refs.sd.timeStop()
+					this.$bus.$emit("pause")
+					this.bgon = false;
+					removeClass(this.body,'bgon');
 				}else{
 					this.audio.play();
-					this.timePlay();
 					this.curTime = this.audio.currentTime;
 					this.audio.volume=this.value/100
 					this.$refs.sd.isPlay = true;
-					this.$refs.sd.timePlay()
+					this.$bus.$emit("goplay")
+					this.bgon = true;
+					addClass(this.body,'bgon');
 				}
 				
 				
@@ -189,45 +194,41 @@
 				})
 				
 				let mp3 = `https://music.163.com/song/media/outer/url?id=${id}.mp3`
-				
 				this.audio.src=mp3;
-				
 				this.isPause=false;
 				this.audio.onloadedmetadata= () => {
-					this.$refs.sd.timeStop();
 					this.audio.play();
 					this.isErr = false;
 					this.$bus.$emit("openList",this.id,false);
 					this.duration = this.audio.duration;
-					//let m = fenFormat(this.audio.duration)
-					this.timePlay();
-					this.$refs.sd.isPlay = true;
-					this.$refs.sd.timePlay()
+					this.bgon = true;
+					addClass(this.body,'bgon');
+					
 				}
-				this.audio.onended= () => {
+				this.audio.ontimeupdate = () => {
+					this.processPlay();
+				}
+				this.audio.onended = () => {
 					if(!this.loop){
 						this.playNext(id);    
 					}
-					
 				}
-				
-				
 			},
-			timePlay(){
-				this.timer = setInterval(() => {
-					let cur = (this.audio.currentTime / this.audio.duration) *1000;
-					this.curTime = this.audio.currentTime;
+			processPlay(){
+				let cur = (this.audio.currentTime / this.audio.duration) *1000;
+				this.curTime = this.audio.currentTime;
+				cur = parseInt(cur)
+				this.curDur=cur
+				if(this.openDetail){
 					this.$refs.sd.curTime = this.audio.currentTime;
 					this.$refs.sd.duration = this.audio.duration;
-					cur = parseInt(cur)
+					this.$refs.sd.lycPlay();
 					
-					this.curDur=cur;
-					if(cur>=1000){
-						clearInterval(this.timer)
-					}
-					
-				},200)
+				}else{
+					this.$refs.sd.isPlay = false;
+				}
 			},
+			
 			sChange(e){
 				this.audio.currentTime = e/1000*this.audio.duration
 			},
@@ -330,12 +331,13 @@
 				
 				if(this.$refs.sd !== undefined){
 					this.$refs.sd.isPlay = false;
-					this.$refs.sd.timeStop()
+					
 				}
 			}
 			
 		},
 		mounted() {
+			this.body = document.getElementById("app");
 			this.audio = this.$refs.audio;
 			this.$bus.$on('play', (item)=> {
 				this.id = item.id;
@@ -346,20 +348,15 @@
 			})
 			
 			this.$bus.$on('toSheet', ()=> {
-				
 				this.closed()
-				
-				
-				
 			})
 			
 			this.$bus.$on('pause', ()=> {
 				if(this.duration ===0) return;
 				this.audio.pause();
 				this.isPause=true;
-				clearInterval(this.timer)
 				this.$refs.sd.isPlay = false;
-				this.$refs.sd.timeStop()
+				
 			})
 			let that = this;
 			this.audio.addEventListener("error",() => {   
@@ -578,5 +575,7 @@
 		left: 320px;
 		top: 20px;
 	}
-	
+	.bgon .play-wp{
+		background: none;
+	}
 </style>

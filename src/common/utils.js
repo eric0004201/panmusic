@@ -11,7 +11,19 @@ export function debounce(func, wait) {
         }, wait);
     }
 }
-
+export function throttle(func, delay) {
+    var timer = null;
+    return function() {
+        var context = this;
+        var args = arguments;
+        if (!timer) {
+            timer = setTimeout(function() {
+                func.apply(context, args);
+                timer = null;
+            }, delay);
+        }
+    }
+}
 export function dateFormat(fmt, date) {
     let ret;
     const opt = {
@@ -104,3 +116,25 @@ export function checkCollect(id,type="collectList"){
 export function setNav(nav){
 	localStorage.setItem("navCollapse",nav);
 }
+
+export function getNav(){
+	if(localStorage.getItem("navCollapse") === null){
+		return true
+	}else{
+		return localStorage.getItem("navCollapse") === "true"
+	}
+}
+
+function hasClass( elements,cName ){ 
+  return !!elements.className.match( new RegExp( "(\\s|^)" + cName + "(\\s|$)") ); 
+}; 
+export function addClass( elements,cName ){ 
+  if( !hasClass( elements,cName ) ){ 
+    elements.className += " " + cName; 
+  }; 
+}; 
+export function removeClass( elements,cName ){ 
+  if( hasClass( elements,cName ) ){ 
+    elements.className = elements.className.replace( new RegExp( "(\\s|^)" + cName + "(\\s|$)" ), " " );
+  }; 
+};

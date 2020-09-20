@@ -51,9 +51,9 @@
 
 <style lang="scss" scoped>
 	.song-item{
-		width: 19%;
+		width: 100%;
 		@include list-item;
-		@include mediaWidth;
+		
 	}
 	.img{
 		width: 100%;
@@ -83,5 +83,8 @@
 	}
 	.song-item:hover .icon-hide{
 		opacity: 1;
+	}
+	.bgon .icon-hide{
+		color: $navActiveColor;
 	}
 </style>

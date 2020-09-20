@@ -30,6 +30,7 @@
 		},
 		created() {
 			this.keyWord = this.$route.params.id
+			
 		},
 		mounted() {
 			this.$bus.$on("gotop",() =>{
@@ -46,6 +47,7 @@
 				this.tot = n;
 				
 			})
+			
 		},
 		methods:{
 			typeClick(n,e){
@@ -104,5 +106,10 @@
 	}
 	.list-tit div.on{
 		color: $black1;
+	}
+	
+	.bgon .tips{
+		color: #3a3838;
+		font-size: 15px;
 	}
 </style>

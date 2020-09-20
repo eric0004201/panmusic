@@ -14,11 +14,51 @@ $bgLeft:#ededed;
 $navHoverBg:#e7e7e7;
 $navActiveBg:#e2e2e2;
 $navActiveColor:#d33a31;
-
+body{overflow-x: hidden;}
 .amt{
 	transition: all 0.3s;
 }
 
+.bgon{
+	color: #fff;
+	overflow: hidden;
+	span,div{
+		color: #ede9e9;
+	}
+	
+	&::before {
+					content: "";
+					position: absolute;
+					top: -100%;
+					left: -100%;
+					bottom: -100%;
+					right: -100%;
+					background: linear-gradient(45deg,  #ff1606 0%, #0901e9 50%, #3ab003 100%);
+					background-size: 100% 100%;
+					animation: bgposition 8s infinite linear alternate;
+					z-index: -1;
+					opacity: 0.3;
+			}
+	}
+
+	
+	@keyframes bgposition {
+		0% {
+				transform: translate(30%, 30%);
+		}
+		25% {
+				transform: translate(30%, -30%);
+		}
+		50% {
+				transform: translate(-30%, -30%);
+		}
+		75% {
+				transform: translate(-30%, 30%);
+		}
+		100% {
+				transform: translate(30%, 30%);
+		}
+}
 @mixin list-item {
   
   margin-bottom: 30px;

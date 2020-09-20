@@ -93,10 +93,18 @@
 		transform: rotateY(90deg);
 		z-index: 1;
 	}
+	
 </style>
 
-<style>
+<style lang="scss">
 	@import url("~assets/css/reset.css");
+	#app{
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		left: 0;
+		top: 0;
+	}
 	@media screen and (max-width: 960px) {
 			#app{
 				position: absolute;
@@ -104,50 +112,24 @@
 				width: 100%;
 				transition: all 1.4s;
 				transform: rotate(720deg) scale(0);
-				
+				z-index: 2;
+				background: #fff;
 			}
 			body{
 				overflow: hidden;
+				
 			}
-			body::before{
-				content: "请把窗口开大点好吗";
+			body::after{
+				content: " ";
 				position: absolute;
 				width: 100%;
 				left: 0;
-				top: 100px;
-				font-size: 18px;
-				text-align: center;
-				animation: stip 1.6s ease-out infinite;
+				top: 0;
+				height: 100%;
+				background: url(assets/images/gx.gif);
+				opacity: 0.8;
 			}
-			@keyframes stip {
-			    0% {   
-						
-						color: #D33A31;
-						letter-spacing:0.3;
-			      transform: scale(01) translateY(0px); 
-						opacity:0.5;
-						filter: blur(5px);
-			    }
-					25%{
-					  color:#D33A31;        
-						filter: blur(0);		 
-						transform: scale(1.1) translateY(100px); 
-						letter-spacing:1;
-						opacity:1;
-					} 
-					60%{
-					  color:#e90606;        
-						filter: blur(0);		 
-						transform: scale(1.1) translateY(100px); 
-						letter-spacing:1;
-					} 
-			    100% {    
-						letter-spacing: 13px;
-						color: #000;
-			      transform:  scale(6.2) translateY(0px); 
-						opacity:1;
-						
-			    }
-			}
+			
+			
 	} 
 </style>
