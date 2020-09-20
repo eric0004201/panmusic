@@ -43,7 +43,6 @@
 <script>
 	import Comments from 'components/content/Comments/Comments.vue'
 	import Pagination from 'components/content/Pagination/Pagination.vue'
-	import CanvasBg from 'components/common/canvasBg/CanvasBg.vue'
 	import { getMusicComment } from 'network/find.js'
 	
 	
@@ -81,8 +80,8 @@
 		},
 		components:{
 			Comments,
-			Pagination,
-			CanvasBg
+			Pagination
+			
 		},
 		props:{
 			id:{
