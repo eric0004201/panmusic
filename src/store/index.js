@@ -34,6 +34,12 @@ export default new Vuex.Store({
 			state.tmList = payload;
 			state.mList.push(...state.tmList)
 			
+		},
+		removeMusic(state,id){
+			let index = state.mList.findIndex(item=>{
+				return item.id === id;
+			})
+			state.mList.splice(index,1)
 		}
   },
   actions: {

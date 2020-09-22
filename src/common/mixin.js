@@ -72,4 +72,33 @@ export const collectSong = {
 		}
 	}
 }
-
+import { setMySheet, getMySheet, removeMySheet } from 'common/utils.js'
+export const plusSt = {
+	methods:{
+		plusSheet(){
+			
+			if(getMySheet().length>=5) {
+				
+				return
+			};
+			this.$prompt('', '请输入歌单名字', {
+				inputPattern:/^.{1,10}$/,
+				inputErrorMessage: '名字长度只能在1-10位',
+				confirmButtonText: '确定'
+			}).then(({ value }) => {
+				setMySheet(value).then(() => {
+					this.sheetShow = false;
+					this.$message({
+						message: '添加成功',
+						type: 'success'
+					});
+				}).catch(() => {
+					this.$alert("歌单名字已存在！").catch(() =>{})
+				});
+				this.getSheet = getMySheet();
+			}).catch(() =>{
+				
+			});
+		}
+	}
+}

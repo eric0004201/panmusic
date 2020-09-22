@@ -13,8 +13,6 @@
 		</div>
 		<play></play>
 		<play-list></play-list>
-		
-    
   </div>
 </template>
 
@@ -25,6 +23,7 @@
 	import LeftNavBar from 'components/content/LeftNavBar/LeftNavBar.vue'
 	import Play from 'components/content/Play/Play.vue'
 	import PlayList from 'components/content/PlayList/PlayList.vue'
+	
 	
 	export default {
 		name: 'App',
@@ -40,6 +39,7 @@
 				return !(this.$route.path.indexOf('video')>0)
 			}
 		}
+		
 	}
 </script>
 <style scoped="scoped">
@@ -49,7 +49,7 @@
 		left: 0;
 		right: 0;
 		top: 60px;
-		bottom: 70px;
+		bottom: 0px;
 		display: flex;
 		
 	}
@@ -104,6 +104,7 @@
 		width: 100%;
 		left: 0;
 		top: 0;
+		overflow: hidden;
 	}
 	@media screen and (max-width: 960px) {
 			#app{

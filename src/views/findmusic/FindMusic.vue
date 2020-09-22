@@ -1,5 +1,5 @@
 <template>
-	<div class="main">
+	<div class="main" v-loading="isloading">
 		<div class="main-in">
 			<my-carousel :banner="banner"></my-carousel>
 			<div class="tit">推荐歌单</div>
@@ -28,7 +28,8 @@
 				banner:[],
 				songs:[],
 				list:[],
-				mvList:[]
+				mvList:[],
+				isloading:true
 			}
 		},
 		components:{
@@ -53,6 +54,7 @@
 			});
 			getMV().then(res => {
 				this.mvList=res.result;
+				this.isloading = false;
 			})
 		}
 	}

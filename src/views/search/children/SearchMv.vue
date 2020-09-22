@@ -61,5 +61,6 @@
 <style lang="scss" scoped>
 	.res-mv{
 		padding: 15px;
+		padding-bottom: 100px;
 	}
 </style>

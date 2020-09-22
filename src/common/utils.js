@@ -138,3 +138,118 @@ export function removeClass( elements,cName ){
     elements.className = elements.className.replace( new RegExp( "(\\s|^)" + cName + "(\\s|$)" ), " " );
   }; 
 };
+
+export function setUser(name){
+	localStorage.setItem("user",name);
+}
+export function getUser(){
+	return localStorage.getItem("user");
+}
+
+export function setMySheet(name){
+	
+	if(localStorage.getItem('mySheet') === null){
+		let s = [];
+		let o = {};
+		o.name = name;
+		o.list = [];
+		s.push(o)
+		
+		return new Promise((resolve,reject) => {
+			localStorage.setItem('mySheet',JSON.stringify(s))
+			resolve()
+		})
+	}else{
+		let ss =  JSON.parse(localStorage.getItem('mySheet'))
+		
+		let old = ss.find(item=>{
+			return name === item.name;
+		})
+		let o = {};
+		o.name = name;
+		o.list = [];
+		return new Promise((resolve,reject) => {
+			if(!old){
+				ss.push(o);
+				localStorage.setItem('mySheet',JSON.stringify(ss))
+				resolve()
+			}else{
+				reject("已存在！")
+			}
+		})
+	}
+}
+
+export function getMySheet(type = 1){
+	if(localStorage.getItem('mySheet') === null){
+		return [];
+	}else{
+		if(type === 2){
+			let s = JSON.parse(localStorage.getItem('mySheet'));
+			let arr = []
+			s.forEach(item => {
+				arr.push(item.name)
+			})
+			return arr
+		}else{
+			return JSON.parse(localStorage.getItem('mySheet'))
+		}
+		
+	}
+}
+
+export function setMySheetItem(name,obj,all=1){
+	if(localStorage.getItem('mySheet') === null){
+		this.$alert("还没有歌单哦！请先新建一个吧").catch(() =>{})
+		return
+	}else{
+		let s = JSON.parse(localStorage.getItem('mySheet'));
+		let index = s.findIndex(item => {
+			return name === item.name
+		})
+		if(all === 2){
+			s[index].list = [];
+			s[index].list.push(...obj);
+			localStorage.setItem('mySheet',JSON.stringify(s))
+		}else{
+			let old = s[index].list.find(item=>{
+				return obj.name === item.name;
+			})
+			return new Promise((sus,err) => {
+				if(!old){
+					
+					s[index].list.unshift(obj);
+					localStorage.setItem('mySheet',JSON.stringify(s))
+					sus()
+				}else{
+					err()
+				}
+			})
+		}
+		
+		
+		
+	}
+}
+
+export function getMySheetItem(name){
+	if(localStorage.getItem('mySheet') === null){
+		return [];
+	}else{
+		let s = JSON.parse(localStorage.getItem('mySheet'));
+		let index = s.findIndex(item => {
+			return name === item.name
+		})
+		return s[index].list;
+	}
+}
+
+
+export function removeMySheet(name){
+	let s =  JSON.parse(localStorage.getItem('mySheet'))
+	let index = s.findIndex(item => {
+		return name === item.name
+	})
+	s.splice(index,1);
+	localStorage.setItem('mySheet',JSON.stringify(s))
+}

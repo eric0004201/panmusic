@@ -36,6 +36,9 @@
 				}
 			}
 		},
+		mounted() {
+			
+		},
 		methods:{
 			toMusicList(){
 				

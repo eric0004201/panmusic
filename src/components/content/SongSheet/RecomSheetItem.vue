@@ -149,9 +149,11 @@
 		top: 0;
 		padding: 10px;
 		background: rgba(0,0,0,0.4);
-		color: #fff;
+		color: #e1dede;
+		z-index: 2;
 		font-size: $fs14;
-		transform: translate(0,-50px);
+		transform: scale(2);
+		opacity: 0;
 	}
 	.icon-hide{
 		position: absolute;
@@ -163,9 +165,7 @@
 	.bgon .icon-hide{
 		color: $navActiveColor;
 	}
-	.song-item:hover .wd-hide{
-		transform: translate(0,0);
-	}
+	
 	.song-item:hover .icon-hide{
 		opacity: 1;
 	}
@@ -185,23 +185,37 @@
 		transform: translateX(0px);
 		opacity: 1;
 		animation: rollIn; 
-		animation-duration: 0.9s;
+		animation-duration: 1.2s;
 		-moz-animation-fill-mode: forwards;
+		.wd-hide{
+			transform: scale(1);
+			opacity: 1;
+			transition-delay: 0.8s;
+		}
 	}
 	.cur1.ison{
 		transform: rotateY(0deg);
 		opacity: 1;
 		animation:jackInTheBox;
-		animation-duration: 1.1s;
+		animation-duration: 1.5s;
 		-moz-animation-fill-mode: forwards;
-		
+		.wd-hide{
+			transform: scale(1);
+			opacity: 1;
+			transition-delay: 1.3s;
+		}
 	}
 	.cur2.ison{
 		transform: translateX(0px);
 		opacity: 1;
 		animation: zoomInRight;
-		animation-duration: 1.2s;
+		animation-duration: 1.7s;
 		-moz-animation-fill-mode: forwards;
+		.wd-hide{
+			transform: scale(1);
+			opacity: 1;
+			transition-delay: 1.8s;
+		}
 	}
 	.ison .wd1{
 		transform: translateY(0px);

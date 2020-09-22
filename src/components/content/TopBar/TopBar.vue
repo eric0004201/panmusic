@@ -1,8 +1,9 @@
 <template>
 	<div class="top-bar">
-		
+		<a class="git" href="https://github.com/eric0004201/panmusic" target="_blank"><img src="~assets/images/git.png"/></a>
+		<user></user>
 		<div class="tit amt">
-			<span>{{getTitle}} </span>
+			<div class="ttit amt" :class="{aniwd:isa}" v-html="getT"></div>
 			<div v-if="showBack" class="back" @click="back()"><i class="el-icon-arrow-left"></i></div>
 		</div>
 		<div class="search" @click="showPop">
@@ -26,6 +27,7 @@
 	import { getSearch } from 'network/find.js'
 	import { mapGetters } from 'vuex'
 	import SearchPop from 'components/content/SearchPop/SearchPop.vue'
+	import User from 'components/content/User/User.vue'
 	
 	export default{
 		name:"TopBar",
@@ -33,17 +35,31 @@
 			return {
 				input:"",
 				getValue:null,
-				bgon:false
+				bgon:false,
+				isa:false
+				
 			}
 		},
 		computed:{
 			...mapGetters(['getTitle']),
+			getT(){
+				let arr = this.getTitle.split("");
+				let str="";
+				arr.forEach((item, index) => {
+					str+= '<span>' + item + '</span>'
+				})
+				setTimeout(()=>{
+					this.isa = true
+				},500)
+				return str;
+			},
 			showBack(){
 				return this.$route.path.indexOf('video') >0
 			}
 		},
 		components:{
-			SearchPop
+			SearchPop,
+			User
 		},
 		methods:{
 			getKey(){
@@ -91,6 +107,7 @@
 			}
 		},
 		mounted() {
+			
 			let getK=debounce(this.getKey,350);
 			this.getValue = () => {
 				getK()
@@ -126,13 +143,18 @@
 		position: relative;
 		text-align: center;
 		color: $black1;
-		font-size: $fs18;
+		font-size: 22px;
 		line-height: 60px;
 		text-align: center;
 		overflow: hidden;
+		box-shadow: 0 5px 35px -1px rgba(0,0,0,.1);
 	}
-	
-	
+	.ttit{
+		opacity: 0;
+	}
+	.ttit.aniwd{
+		opacity: 1;
+	}
 	.search{
 		position: absolute;
 		right: 30px;
@@ -157,5 +179,11 @@
 	}
 	.back:hover{
 		background: #eee;
+	}
+	.git{
+		position: absolute;
+		left: 15px;
+		top: 4px;
+		z-index: 2;
 	}
 </style>

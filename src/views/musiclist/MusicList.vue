@@ -207,6 +207,7 @@
 	}
 	.main{
 		padding: 40px;
+		padding-bottom: 100px;
 	}
 	.ml-tit2 img{
 		width: 36px;
@@ -278,12 +279,15 @@
 		left: 243px;
 		top: 47px;
 		color: #222;
-		height: 38px;
+		height: 38px; 
 		padding: 4px;
 		border-radius: 50%;
 		line-height: 29px;
 		background: rgba(255,255,255,0.7);
 		animation: circle 10s linear infinite;
+	}
+	.bgon .collect-wp{
+		background: rgba(188,180,180,0.7);
 	}
 	@keyframes circle {
 	    0% {   

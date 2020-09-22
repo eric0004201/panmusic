@@ -1,5 +1,5 @@
 <template>
-	<div class="play-wp amt" :class="{on : openDetail}">
+	<div class="play-wp amt" :class="{on : openDetail,pshow:isShow}">
 		<song-detail v-if="Object.keys(item).length>0"
 									ref="sd" 
 									:id="id"
@@ -8,7 +8,7 @@
 									:img="album.blurPicUrl" 
 									@closed="closed">
 		</song-detail>
-		<div class="play amt">
+		<div class="play">
 			<div class="play-bar">
 				<el-slider v-model="curDur"
 									 :show-tooltip="false"
@@ -26,6 +26,10 @@
 			</div>
 			<div class="collect-wp" v-show="Object.keys(item).length>0">
 				<collect ref="col" @collect="collect"></collect>
+				
+			</div>
+			<div class="collect-wp2" v-show="Object.keys(item).length>0">
+				<collect-list @collectList="collectList"></collect-list>
 			</div>
 			<div class="play-wrap">
 				<div class="bn-back" @click="playBack()"><i class="el-icon-back"></i></div>
@@ -64,17 +68,19 @@
 <script>
 	import SongDetail from './SongDetail.vue'
 	import Collect from 'components/common/collect/Collect.vue'
+	import CollectList from 'components/content/CollectList/CollectList.vue'
 	import { mapGetters } from 'vuex'
 	import { fenFormat, randomFrom, setItem, removeItem, checkCollect } from 'common/utils.js'
 	import { getPlayInfo, getLyric } from 'network/player.js'
 	import { songInfo } from 'common/mixin.js'
-	import { addClass, removeClass } from 'common/utils.js'
+	import { addClass, removeClass, getMySheet, setMySheetItem } from 'common/utils.js'
 	
 	export default{
 		name:"Play",
 		components:{
 			SongDetail,
-			Collect
+			Collect,
+			CollectList
 		},
 		computed:{
 			...mapGetters(['getMList','getTMList']),
@@ -102,10 +108,22 @@
 				lrc:'',
 				isErr:false,
 				bgon:false,
-				body:null
+				body:null,
+				isShow:false,
+				showList:false
 			}
 		},
 		methods:{
+			collectList(name){
+				setMySheetItem(name,this.item).then(()=>{
+					this.$message({
+						message: '添加成功',
+						type: 'success'
+					});
+				}).catch(() => {
+					this.$alert("歌曲已存在！").catch(() =>{})
+				})
+			},
 			collect(tf){
 				if(tf === true){
 					setItem(this.item)
@@ -199,10 +217,16 @@
 				this.audio.onloadedmetadata= () => {
 					this.audio.play();
 					this.isErr = false;
-					this.$bus.$emit("openList",this.id,false);
+					
+					if(this.showList === 2){
+						this.$bus.$emit("openList",this.id,true,2);
+					}else{
+						this.$bus.$emit("openList",this.id,false);
+					}
 					this.duration = this.audio.duration;
 					this.bgon = true;
 					addClass(this.body,'bgon');
+					this.isShow = true;
 					
 				}
 				this.audio.ontimeupdate = () => {
@@ -233,15 +257,12 @@
 				this.audio.currentTime = e/1000*this.audio.duration
 			},
 			playNext(){
+			
+				if(this.audio.loop) return;
 				let id = this.id;
 				if(this.getMList.length>1){
-					let num;
-					
-					this.getMList.findIndex(function(value, index, arr) {
-						if(id === value.id) {
-							num = index
-							
-						}
+					let num = this.getMList.findIndex(function(value, index, arr) {
+						return id === value.id
 					})
 					
 					
@@ -265,7 +286,7 @@
 					this.setInfo(this.item)
 					this.playMusic(nid)
 					this.id = nid;
-					this.$bus.$emit("openList",this.id,false);
+					
 					
 				}else{
 					this.audio.loop = true;
@@ -275,6 +296,7 @@
 				
 			},
 			playBack(){
+				if(this.audio.loop) return;
 				let id = this.id;
 				if(this.getMList.length>1){
 					let num;
@@ -300,7 +322,7 @@
 					this.setInfo(this.item)
 					this.playMusic(nid);
 					this.id = nid;
-					this.$bus.$emit("openList",this.id,false);
+					
 				}else{
 					this.audio.loop = true;
 					this.audio.play();
@@ -339,16 +361,19 @@
 		mounted() {
 			this.body = document.getElementById("app");
 			this.audio = this.$refs.audio;
-			this.$bus.$on('play', (item)=> {
+			this.$bus.$on('play', (item,tf)=> {
 				this.id = item.id;
 				this.item = item;
+				
+				this.showList = tf
 				
 				this.setInfo(this.item);
 				this.playMusic(this.id);
 			})
 			
 			this.$bus.$on('toSheet', ()=> {
-				this.closed()
+				this.closed();
+				this.$refs.sd.isd = false;
 			})
 			
 			this.$bus.$on('pause', ()=> {
@@ -389,6 +414,14 @@
 		box-shadow:0 5px 10px rgba(0, 0, 0, 0.3);
 		background: #fff;
 		z-index: 10;
+		transform: translateY(130px);
+		opacity: 0;
+		
+	}
+	.pshow.play-wp{
+		transform: translateY(0px);
+		opacity: 1;
+		transition-duration: 1s;
 	}
 	.play{
 		height: 70px;
@@ -397,6 +430,12 @@
 		right: 0;
 		bottom: 0;
 		
+	}
+	.bgon .pshow .play{
+		background: rgba(209,184,114,0.9);
+	}
+	.pshow .play{
+		background: #fff;
 	}
 	.play-wrap{
 		width: 200px;
@@ -572,10 +611,15 @@
 	}
 	.collect-wp{
 		position: absolute;
-		left: 320px;
+		left: 316px;
 		top: 20px;
 	}
 	.bgon .play-wp{
 		background: none;
+	}
+	.collect-wp2{
+		position: absolute;
+		left: 360px;
+		top: 20px;
 	}
 </style>

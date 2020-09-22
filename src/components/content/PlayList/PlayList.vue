@@ -4,7 +4,7 @@
 		<div class="ptit">
 			
 			<el-tabs v-model="activeName" @tab-click="handleClick">
-				<el-tab-pane :label="'播放列表('+getMList.length+')'" name="first">
+				<el-tab-pane :label="pname+'('+getMList.length+')'" name="first">
 					<div class="list-head">
 						<el-table
 						    ref="singleTable"
@@ -27,8 +27,9 @@
 						    <el-table-column
 						      property="name"
 						      label="歌手"
+									:show-overflow-tooltip='true'
 									:formatter="person"
-									width="160"
+									width="140"
 						      >
 						    </el-table-column>
 						    <el-table-column
@@ -37,6 +38,14 @@
 									width="100"
 						      label="时长">
 						    </el-table-column>
+								<el-table-column width="80" label="操作">
+									<template slot-scope="scope">
+										<el-button
+											size="mini"
+											type="danger"
+											@click.stop="handleDelete(scope.$index, scope.row)">删除</el-button>
+									</template>
+								</el-table-column>
 						  </el-table>
 					</div>
 				</el-tab-pane>
@@ -90,7 +99,7 @@
 
 <script>
 	import { mapGetters } from 'vuex'
-	import { fenFormat } from 'common/utils.js'
+	import { fenFormat, debounce, setMySheetItem } from 'common/utils.js'
 	import {collectSongLength, collectSong} from "common/mixin.js"
 	
 	
@@ -112,7 +121,9 @@
 				collectLength:this.collectSongLength(),
 				collectSongs:this.collectSong(),
 				sheetLength:this.collectSongLength("songSheet"),
-				sheetSongs:this.collectSong("songSheet")
+				sheetSongs:this.collectSong("songSheet"),
+				name:'',
+				pname:'播放列表'
 			}
 		},
 		
@@ -132,6 +143,7 @@
 			},
 			playSong(val){
 				this.$bus.$emit("play",val);
+				this.firstCK = false;
 			},
 			playSongCollect(val){
 				if(!this.firstCK){
@@ -164,6 +176,16 @@
 			},
 			handleClick(tab, event){
 				
+			},
+			getH(){
+				this.getHeight = window.innerHeight - 130;
+				
+			},
+			handleDelete(index, row) {
+				let id = row.id
+				this.$store.commit("removeMusic",id)
+				setMySheetItem(this.name,this.getMList,2)
+				this.firstCK = false;
 			}
 		},
 		mounted() {
@@ -175,15 +197,29 @@
 				this.sheetSongs = this.collectSong("songSheet")
 				
 			});
+			
+			
 			this.$bus.$on("listClick",() => {
 				this.firstCK = false;
 			})
+			this.$bus.$on("curname",(name) => {
+				this.name = name;
+				this.activeName = "first"
+				this.firstCK = false;
+			})
+			let gh = debounce(this.getH,100)
 			
-			window.onresize = () => {
-				this.getHeight = window.innerHeight - 130;
-			}
+			window.addEventListener('resize',() => {
+				gh();
+			},false)
 			
-			this.$bus.$on('openList',(id,b) => {
+			this.$bus.$on('openList',(id,b,tf) => {
+				
+				if(tf ===2){
+					this.pname = this.name
+				}else{
+					this.pname = "播放列表"
+				}
 				this.tableData = this.getMList;
 				this.tableDataCollect = this.collectSongs;
 				if(b) this.isShow = true;
@@ -224,9 +260,13 @@
 		filter:blur(20px);
 		transform-origin: center bottom; 
 		opacity: 0;
+		color: $black2;
+	}
+	.bgon .play-list .ptit{
+		color: $black2;
 	}
 	.ptit{
-		padding-top: 10px;
+		padding-top: 20px;
 		
 		font-size: $fs18;
 		text-align: center;
@@ -239,11 +279,13 @@
 	}
 	.close{
 		position: absolute;
-		right: 4px;
-		top: 4px;
-		font-size: 30px;
+		right: 0;
+		top: 0;
+		font-size: 26px;
 		cursor: pointer;
 		z-index: 10;
+		height: 26px;
+		line-height: 26px;
 	}
 	.bgon .close{
 		color: #333;
@@ -262,7 +304,10 @@
 		overflow: hidden;
 	}
 	.ptit ::v-deep .el-tabs__item{
-		color: #303133;
+		color: $black2;
+	}
+	.bgon .ptit ::v-deep .el-table .cell{
+		color: $black2;
 	}
 	.ptit ::v-deep .el-tabs__item.is-active{
 		color: $navActiveColor;
@@ -282,8 +327,8 @@
 	}
 	.ptit ::v-deep .el-tabs__item{
 		font-size: 15px;
-		height: 50px;
-		line-height: 50px;
+		height: 40px;
+		line-height: 40px;
 	}
 	
 	.ptit ::v-deep .el-table__body-wrapper::-webkit-scrollbar {
@@ -323,7 +368,7 @@
 		bottom: 0;
 		overflow: auto;
 	}
-	.search-list-item{
+	.search-list-item,.bgon .search-list .search-list-item{
 		line-height: 40px;
 		font-size: 14px;
 		padding:0 20px;
@@ -334,29 +379,13 @@
 		text-overflow: ellipsis;
 		border-bottom: 1px solid #EBEEF5;
 		transition: background-color .25s ease;
+		color: $black2;
 	}
 	.search-list-item:hover{
 		
 		background: #f5f7fa;
 	}
-	.bgon .play-list ::v-deep .el-table{
-		background: #b58383;
-	}
-	.bgon .play-list ::v-deep .el-table tr,.bgon .play-list ::v-deep .el-table th{
-		background: #b58383;
-	}
-	.bgon .play-list ::v-deep .el-table tr:hover td{
-		background: #b3b3b3;
-	}
-	.bgon .play-list ::v-deep .el-table__body tr.current-row>td{
-		background-color: #a4abb3;
-	}
-	.bgon .search-list{
-		background: #b58383;
-	}
-	.bgon .search-list-item:hover{
-		background: #b3b3b3;
-	}
+	
 	.bgon .play-list{
 		
 	}

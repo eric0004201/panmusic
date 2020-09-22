@@ -153,6 +153,9 @@
 	.pg{
 		padding-top: 30px;
 	}
+	.search-songs{
+		padding-bottom: 100px;
+	}
 	.bgon .search-songs ::v-deep .el-table{
 		background: none;
 	}

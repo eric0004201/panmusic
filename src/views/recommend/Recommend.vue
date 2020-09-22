@@ -141,7 +141,8 @@
 			},
 			msc(){
 				var scrollTop = this.$el.scrollTop;
-				this.headHeight = this.$refs.hd.offsetHeight +70;
+				if(!!this.$refs.hd.offsetHeight) this.headHeight = this.$refs.hd.offsetHeight +70;
+				
 				for(let i=0; i<this.hang; i++){
 					if(scrollTop>this.headHeight+i*this.itemHeight-600 && scrollTop<=this.headHeight+(i+1)*this.itemHeight-600){
 						this.curIndex = (i+1)*3

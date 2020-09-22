@@ -83,9 +83,13 @@
 		
 		font-weight: bold;
 		font-size: 32px;
+		
+	}
+	.nav-bar:hover .animate__animated{
+		animation-play-state: paused;
 	}
 	.left-nav ::v-deep .el-menu-item:focus,.left-nav ::v-deep .el-menu-item:hover{
-		background: #FDE2E2;
+		background: rgba(209, 184, 114, 0.9);
 	}
 	.left-nav ::v-deep .el-menu{
 		border-right: none;

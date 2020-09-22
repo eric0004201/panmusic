@@ -60,5 +60,6 @@
 <style lang="scss" scoped>
 	.slist{
 		padding: 20px;
+		padding-bottom: 100px;
 	}
 </style>

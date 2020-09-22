@@ -1,5 +1,5 @@
 <template>
-	<div class="collect" @click="collect">
+	<div class="animate__animated animate__heartBeat collect " @click="collect">
 		<i class="el-icon-star-off" :class="{'el-icon-star-on':ison}"></i>
 	</div>
 </template>
@@ -25,7 +25,8 @@
 	.collect{
 		font-size: 30px;
 		cursor: pointer;
-		
+		animation-iteration-count: infinite;
+		animation-delay: 4s;
 	}
 	.el-icon-star-on{
 		color: $navActiveColor;

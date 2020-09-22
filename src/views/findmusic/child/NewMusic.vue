@@ -82,9 +82,12 @@
 	.wd{
 		font-size: $fs14;
 		padding-left: 20px;
+		overflow: hidden;
+		flex: 1;
 	}
 	.tip{
 		padding-top: 8px;
 		padding-bottom: 20px;
+		@include txt-over;
 	}
 </style>
