@@ -184,7 +184,10 @@
 			handleDelete(index, row) {
 				let id = row.id
 				this.$store.commit("removeMusic",id)
-				setMySheetItem(this.name,this.getMList,2)
+				if(this.pname !== "播放列表"){
+					setMySheetItem(this.name,this.getMList,2)
+				}
+				
 				this.firstCK = false;
 			}
 		},
@@ -214,7 +217,7 @@
 			},false)
 			
 			this.$bus.$on('openList',(id,b,tf) => {
-				
+			
 				if(tf ===2){
 					this.pname = this.name
 				}else{

@@ -67,6 +67,7 @@
 				this.$store.commit('addMusicList',list);
 				this.$bus.$emit("play",list[0],2);
 				
+				this.$bus.$emit("collectClick");
 				this.$bus.$emit("curname",name);
 				this.isoff = true;
 				setTimeout(() =>{

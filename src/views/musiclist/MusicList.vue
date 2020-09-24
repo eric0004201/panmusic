@@ -74,6 +74,7 @@
 		watch:{
 			$route(to,from){
 					this.init()
+					this.$refs.coll.ison = checkCollect(this.id,"songSheet")
 			}
 		},
 		created() {

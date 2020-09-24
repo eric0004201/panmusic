@@ -346,7 +346,7 @@
 				})
 			},
 			openList(){
-				this.$bus.$emit("openList",this.id,true);
+				this.$bus.$emit("openList",this.id,true,this.showList);
 			},
 			closed(){
 				this.openDetail = false;
