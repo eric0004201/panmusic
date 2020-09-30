@@ -24,7 +24,7 @@
 		<div class="ml-list-wp">
 			<el-tabs v-model="activeName" @tab-click="handleClick">
 				<el-tab-pane label="歌曲列表" name="first">
-					<songs-list ref="songs" @imgDone="imgDone" :mTableData="mTableData"></songs-list>
+					<songs-list ref="songs" @goPage="gopg" @imgDone="imgDone" :mTableData="mTableData"></songs-list>
 				</el-tab-pane>
 				<el-tab-pane :label="tabTit" name="second">
 					<comments :hot='hot' :comments="comments" :cnum="cnum"></comments>
@@ -32,6 +32,7 @@
 				</el-tab-pane>
 			</el-tabs>
 		</div>
+		
 	</div>
 </template>
 
@@ -43,6 +44,7 @@
 	import { getListInfo, getListItem, getComments } from 'network/player.js'
 	import { fenFormat, dateFormat, setItem, removeItem, checkCollect } from 'common/utils.js'
 	import { imgSrc } from 'common/mixin.js'
+	
 	
 	export default{
 		name:"MusicList",
@@ -70,6 +72,7 @@
 			Comments,
 			SongsList,
 			Collect
+			
 		},
 		watch:{
 			$route(to,from){
@@ -109,6 +112,10 @@
 		},
 		
 		methods:{
+			gopg(){
+				document.querySelector('#main').scrollTop = 300;
+				this.loading = false;
+			},
 			collect(tf){
 				let obj = {};
 				obj.id = this.id;
@@ -178,7 +185,7 @@
 					}
 					
 					
-					document.getElementById('main').scrollTop = 460;
+					document.getElementById('main').scrollTop = 300;
 					this.loading = false;
 					
 				})

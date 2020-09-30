@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store/index'
+import {isLogin} from "common/login.js"
 
 const FindMusic = () => import('../views/findmusic/FindMusic.vue');
 const NewMusic = () => import('../views/newmusic/NewMusic.vue');
@@ -12,6 +13,8 @@ const Search = () => import('../views/search/Search.vue');
 const SearchSongs = () => import('../views/search/children/SearchSongs.vue');
 const SearchList = () => import('../views/search/children/SearchList.vue');
 const SearchMv = () => import('../views/search/children/SearchMv.vue');
+const Login = () => import('../views/login/Login.vue');
+const Register = () => import('../views/login/Register.vue');
 
 
 const originalReplace = VueRouter.prototype.replace
@@ -79,6 +82,22 @@ Vue.use(VueRouter)
 		}
 	},
 	{
+		path: '/login',
+		name: 'Login', 
+		component: Login,
+		meta:{
+			title:"登录"
+		}
+	},
+	{
+		path: '/register',
+		name: 'Register', 
+		component: Register,
+		meta:{
+			title:"注册"
+		}
+	},
+	{
 		path: '/search/:id',
 		name: 'Search', 
 		component: Search,
@@ -120,9 +139,20 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to,from,next) => {
-	document.title = to.meta.title;
-	store.commit('setTitle',to.meta.title)
-	next()
+	
+	if (to.name === 'Login' && isLogin()){
+		next({ 
+			name: 'FindMusic',
+			replace:true
+		})
+		document.title = '发现音乐';
+		store.commit('setTitle','发现音乐')
+	}else{
+		next()
+		document.title = to.meta.title;
+		store.commit('setTitle',to.meta.title)
+	} 
+	 
 })
 
 export default router

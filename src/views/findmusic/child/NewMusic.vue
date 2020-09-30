@@ -42,7 +42,7 @@
 		methods:{
 			play(item){
 				this.$store.commit('addMusic',item.song);
-				
+				this.$bus.$emit("curname",'播放列表');
 				this.$bus.$emit("play",item.song);
 				
 			}

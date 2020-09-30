@@ -1,5 +1,7 @@
 export default{
-
+	getLogin(state){
+		return state.isLogin;
+	},
 	getKey(state){
 		return state.key;
 	},

@@ -143,7 +143,12 @@ export function setUser(name){
 	localStorage.setItem("user",name);
 }
 export function getUser(){
-	return localStorage.getItem("user");
+	if(localStorage.getItem("user") === null){
+		return '用户'
+	}else{
+		return localStorage.getItem("user");
+	}
+	
 }
 
 export function setMySheet(name){
@@ -194,6 +199,17 @@ export function getMySheet(type = 1){
 		}else{
 			return JSON.parse(localStorage.getItem('mySheet'))
 		}
+		
+	}
+}
+export function getMySheetAll(){
+	if(localStorage.getItem('mySheet') === null){
+		return [];
+	}else{
+		let s = JSON.parse(localStorage.getItem('mySheet'));
+		
+		return s
+		
 		
 	}
 }
@@ -252,4 +268,17 @@ export function removeMySheet(name){
 	})
 	s.splice(index,1);
 	localStorage.setItem('mySheet',JSON.stringify(s))
+}
+
+export function setUid(id){
+	localStorage.setItem("uid",id);
+}
+export function getUid(){
+	return localStorage.getItem("uid");
+}
+
+export function group(arr, step) {
+    return arr.reduce((x, y) => {
+        return Array.isArray(x) ? (x[x.length - 1].push(y) == step ? [...x, []] : x) : [[x, y]];
+    })
 }

@@ -122,6 +122,7 @@
 					this.$store.commit('addMusicList',this.tableData);
 					this.firstCK = true;
 				}
+				this.$bus.$emit("curname",'播放列表');
 				this.$bus.$emit("play",val);
 				this.$refs.singleTable.setCurrentRow(this.tableData[this.cur]);
 			},

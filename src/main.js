@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import VueLazyload from 'vue-lazyload'
 import animated from 'animate.css' 
-import 'element-ui/lib/theme-chalk/index.css';
+
 import {
 	Loading,
 	MessageBox,
@@ -23,12 +23,15 @@ import {
 	TabPane,
 	Pagination,
 	Menu,
-	MenuItem
+	MenuItem,
+	Form,
+	FormItem,
+	Backtop
 } from 'element-ui';
 
 Vue.use(animated)
 Vue.use(Loading.directive);
-
+Vue.use(Backtop)
 Vue.use(Button)
 Vue.use(Input)
 Vue.use(Icon)
@@ -43,6 +46,8 @@ Vue.use(TabPane)
 Vue.use(Pagination)
 Vue.use(Menu)
 Vue.use(MenuItem)
+Vue.use(Form)
+Vue.use(FormItem)
 
 Vue.use(VueLazyload, {
   error: require('assets/images/timg.jpg'),

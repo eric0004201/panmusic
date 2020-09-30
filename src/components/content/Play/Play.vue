@@ -74,6 +74,7 @@
 	import { getPlayInfo, getLyric } from 'network/player.js'
 	import { songInfo } from 'common/mixin.js'
 	import { addClass, removeClass, getMySheet, setMySheetItem } from 'common/utils.js'
+	import { setYun } from 'common/login.js'
 	
 	export default{
 		name:"Play",
@@ -120,6 +121,8 @@
 						message: '添加成功',
 						type: 'success'
 					});
+					setYun()
+					this.$bus.$emit("collectDone")
 				}).catch(() => {
 					this.$alert("歌曲已存在！").catch(() =>{})
 				})
@@ -167,9 +170,15 @@
 				}
 			},
 			changeVoice(e){
-				
+				localStorage.setItem("voice",e)
 				this.value = e
 				this.audio.volume=e/100;
+				if(e>0){
+					this.vc = true
+				}else{
+					this.vc = false
+				}
+				
 			},
 			play(){
 				
@@ -220,7 +229,9 @@
 					
 					if(this.showList === 2){
 						this.$bus.$emit("openList",this.id,true,2);
+						this.showList = false
 					}else{
+						
 						this.$bus.$emit("openList",this.id,false);
 					}
 					this.duration = this.audio.duration;
@@ -257,16 +268,15 @@
 				this.audio.currentTime = e/1000*this.audio.duration
 			},
 			playNext(){
-			
-				if(this.audio.loop) return;
+				
 				let id = this.id;
-				if(this.getMList.length>1){
+				
+				if(this.getMList.length>1&&this.loop!==true){
+					
 					let num = this.getMList.findIndex(function(value, index, arr) {
 						return id === value.id
 					})
 					
-					
-					this.audio.loop = false;
 					let nid;
 					if(num === this.getMList.length-1){
 						nid = this.getMList[0].id
@@ -275,14 +285,12 @@
 						nid = this.getMList[num+1].id
 						this.item = this.getMList[num+1]
 					}
-					
 					//随机
 					if(this.pm === 2){
 						let r = randomFrom(0,this.getMList.length-1)
 						nid = this.getMList[r].id
 						this.item = this.getMList[r]
 					}
-					
 					this.setInfo(this.item)
 					this.playMusic(nid)
 					this.id = nid;
@@ -296,9 +304,9 @@
 				
 			},
 			playBack(){
-				if(this.audio.loop) return;
+				
 				let id = this.id;
-				if(this.getMList.length>1){
+				if(this.getMList.length>1&&this.loop!==true){
 					let num;
 					
 					this.getMList.findIndex(function(value, index, arr) {
@@ -358,7 +366,15 @@
 			}
 			
 		},
+		created() {
+			if(localStorage.getItem("voice") !== null){
+				let voice = Number(localStorage.getItem("voice"));
+				this.value = voice
+			}
+		},
 		mounted() {
+			
+			 
 			this.body = document.getElementById("app");
 			this.audio = this.$refs.audio;
 			this.$bus.$on('play', (item,tf)=> {
@@ -369,6 +385,7 @@
 				
 				this.setInfo(this.item);
 				this.playMusic(this.id);
+				
 			})
 			
 			this.$bus.$on('toSheet', ()=> {
@@ -421,7 +438,7 @@
 	.pshow.play-wp{
 		transform: translateY(0px);
 		opacity: 1;
-		transition-duration: 1s;
+		transition-duration: 0.5s;
 	}
 	.play{
 		height: 70px;

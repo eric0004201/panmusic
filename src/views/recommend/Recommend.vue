@@ -1,5 +1,5 @@
 <template>
-	<div class="main" ref='main' @scroll="mscroll">
+	<div class="main" ref='main' @scroll="mscroll" v-loading="loading">
 		<div class="main-in">
 			<div class="head" ref="hd" v-if="Object.keys(headCon).length>0">
 				<div class="hbg"><img @load="hload" :src="headCon.coverImgUrl | imageUrl"/></div>

@@ -13,6 +13,9 @@
 		</div>
 		<play></play>
 		<play-list></play-list>
+		<login></login>
+		<register></register>
+		<to-top></to-top>
   </div>
 </template>
 
@@ -23,16 +26,19 @@
 	import LeftNavBar from 'components/content/LeftNavBar/LeftNavBar.vue'
 	import Play from 'components/content/Play/Play.vue'
 	import PlayList from 'components/content/PlayList/PlayList.vue'
-	
-	
+	import Login from 'views/login/Login.vue'
+	import Register from 'views/login/Register.vue'
+	import ToTop from 'components/common/totop/ToTop.vue'
 	export default {
 		name: 'App',
 		components: {
 			TopBar,
 			LeftNavBar,
 			Play,
-			PlayList
-			
+			PlayList,
+			Login,
+			Register,
+			ToTop
 		},
 		computed:{
 			showmt(){

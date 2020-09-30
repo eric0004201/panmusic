@@ -3,13 +3,14 @@
 		<el-table
 			
 			ref="singleTable"
-			:data="mTableData"
+			:data="mdata"
 			@row-click="playSong"
 			highlight-current-row
 			@current-change="handleCurrentChange"
 			style="width: 100%">
 			<el-table-column
 			      type="index"
+						:index="indexMethod"
 						align="center"
 			      width="50">
 			</el-table-column>
@@ -45,11 +46,13 @@
 				label="时长">
 			</el-table-column>
 		</el-table>
+		<pagination class="page" ref='page' :pageSize='pageSize' :total="cnum" @goPage='goPage'></pagination>
 	</div>
 </template>
 
 <script>
-	import { fenFormat, dateFormat } from 'common/utils.js'
+	import Pagination from 'components/content/Pagination/Pagination.vue'
+	import { fenFormat, dateFormat,group } from 'common/utils.js'
 	
 	export default{
 		name:"SongsList",
@@ -57,9 +60,16 @@
 			return{
 				loadNum:0,
 				firstCK:false,
-				cur:0
-				
+				cur:0,
+				mdata:[],
+				pageSize:40,
+				cnum:0,
+				arr:[],
+				curPage:0
 			}
+		},
+		components:{
+			Pagination
 		},
 		props:{
 			mTableData:{
@@ -73,29 +83,45 @@
 			this.$bus.$on("collectClick",() => {
 				this.firstCK = false;
 			})
+			
 		},
 		watch:{
 			cur(){
-				
 				if(this.cur === -1) {
-					
 					this.$refs.singleTable.setCurrentRow();
 				}else{
 					this.$refs.singleTable.setCurrentRow(this.mTableData[this.cur]);
 				}
 				
+			},
+			mTableData(){
+				this.arr = group(this.mTableData,this.pageSize);
+				
+				this.cnum = this.mTableData.length
+				this.mdata = this.arr[0]
 			}
 		},
 		methods:{
+			indexMethod(index) {
+				return index+1 + (this.curPage*this.pageSize);
+			},
+			goPage(val){
+				
+				this.mdata = this.arr[val-1]
+				this.firstCK = false;
+				this.curPage = val-1;
+				this.$emit("goPage")
+			},
 			playSong(val){
 			
 				if(!this.firstCK){
-					this.$store.commit('addMusicList',this.mTableData);
+					this.$store.commit('addMusicList',this.mdata);
 					this.firstCK = true;
 					this.$bus.$emit("listClick");
 				}
 				this.$bus.$emit("play",val);
-				this.$refs.singleTable.setCurrentRow(this.mTableData[this.cur]);
+				this.$bus.$emit("curname",'播放列表');
+				this.$refs.singleTable.setCurrentRow(this.mdata[this.cur]);
 			},
 			handleCurrentChange(val) {
 				this.currentRow = val;
@@ -176,5 +202,9 @@
 	}
 	.bgon .slist ::v-deep .el-table__body tr.current-row>td{
 		background-color: #a4abb3;
+	}
+	.page{
+		padding-top: 40px;
+		padding-bottom: 0;
 	}
 </style>

@@ -13,9 +13,9 @@
 						<img :src="imgSrc">
 					</div>
 				</div>
-				<div class="lyric amt" :class="{lyon:isPlay}">
+				<div class="lyric" :class="{lyon:isPlay}">
 					<div class="tit">{{name}}</div>
-					<div class="wd">歌手：<span>{{aName}}</span></div>
+					<div class="wd">歌手：<span class="animate__animated animate__jello singer" @click="search(aName)">{{aName}}</span></div>
 					<div class="lyric-wp" v-show='lrc.indexOf("[") > -1'>
 						<div class="lyc-in amt" ref="lyn">
 							<p class="amt" v-for="(item,index) in lrcfmt" :class="{on : curT === index}" >
@@ -117,6 +117,10 @@
 			}
 		},
 		methods:{
+			search(aName){
+				this.$router.push(`/search/${aName}/songs`)
+				this.closed()
+			},
 			closed(){
 				this.isd = false;
 				this.$emit("closed")
@@ -442,6 +446,16 @@
 	.bgon .song-wrap{
 		background:#afafac;
 	}
-	
+	.bgon .singer,.singer{
+		color: #8cd5ff;
+		text-decoration: underline;
+		cursor: pointer;
+		display: inline-block;
+		animation-iteration-count: infinite;
+		animation-duration: 2.5s;
+	}
+	.singer:hover{
+		animation-play-state: paused;
+	}
 	
 </style>

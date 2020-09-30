@@ -9,10 +9,15 @@ export default new Vuex.Store({
 		mList:[],
 		tmList:[],
 		key:'',
-		title:''
+		title:'',
+		isLogin:false
+		
   },
 	getters,
   mutations: {
+		setLogin(state,payload){
+			state.isLogin = payload;
+		},
 		addToKey(state,payload){
 			state.key = payload;
 		},

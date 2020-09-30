@@ -1,5 +1,5 @@
 <template>
-	<div class="video-wp" ref="vw">
+	<div class="video-wp main" ref="vw">
 		<div class="vin">
 			<div class="v-left">
 				<div class="tit">{{info.name}} - {{info.artistName}}</div>

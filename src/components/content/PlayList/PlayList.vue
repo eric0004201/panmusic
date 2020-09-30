@@ -99,8 +99,9 @@
 
 <script>
 	import { mapGetters } from 'vuex'
-	import { fenFormat, debounce, setMySheetItem } from 'common/utils.js'
+	import { fenFormat, debounce, setMySheetItem, getMySheetItem } from 'common/utils.js'
 	import {collectSongLength, collectSong} from "common/mixin.js"
+	import { setYun } from 'common/login.js'
 	
 	
 	export default{
@@ -122,7 +123,6 @@
 				collectSongs:this.collectSong(),
 				sheetLength:this.collectSongLength("songSheet"),
 				sheetSongs:this.collectSong("songSheet"),
-				name:'',
 				pname:'播放列表'
 			}
 		},
@@ -152,6 +152,7 @@
 				}
 				this.$bus.$emit("play",val);
 				this.$bus.$emit("collectClick");
+				this.pname = "播放列表"
 			},
 			setBg(val){
 				this.currentRow = val;
@@ -185,7 +186,8 @@
 				let id = row.id
 				this.$store.commit("removeMusic",id)
 				if(this.pname !== "播放列表"){
-					setMySheetItem(this.name,this.getMList,2)
+					setMySheetItem(this.pname,this.getMList,2)
+					setYun()
 				}
 				
 				this.firstCK = false;
@@ -200,15 +202,32 @@
 				this.sheetSongs = this.collectSong("songSheet")
 				
 			});
+			this.$bus.$on('curChange', ()=> {
+				this.pname="播放列表"
+			})
 			
+			this.$bus.$on("collectDone",() => {
+				if(this.pname!=="播放列表"){
+					let list = getMySheetItem(this.pname);
+					
+					this.$store.commit('addMusicList',list);
+					this.tableData = list;
+					this.$refs.singleTable.setCurrentRow(this.tableData[0]);
+					
+				}
+			})
 			
 			this.$bus.$on("listClick",() => {
 				this.firstCK = false;
 			})
+			this.$bus.$on("phide",() => {
+				this.isShow = false;
+			})
 			this.$bus.$on("curname",(name) => {
-				this.name = name;
+				this.pname = name;
 				this.activeName = "first"
 				this.firstCK = false;
+				
 			})
 			let gh = debounce(this.getH,100)
 			
@@ -218,11 +237,7 @@
 			
 			this.$bus.$on('openList',(id,b,tf) => {
 			
-				if(tf ===2){
-					this.pname = this.name
-				}else{
-					this.pname = "播放列表"
-				}
+				
 				this.tableData = this.getMList;
 				this.tableDataCollect = this.collectSongs;
 				if(b) this.isShow = true;
@@ -260,7 +275,7 @@
 		background: #fff;
 		box-shadow: 1px 0 3px rgba(0,0,0,0.4);
 		transform: scale(0) translateY(300px);
-		filter:blur(20px);
+		
 		transform-origin: center bottom; 
 		opacity: 0;
 		color: $black2;
@@ -295,7 +310,7 @@
 	}
 	.sin{
 		transform: scale(1) translateY(0);
-		filter:blur(0px);
+		
 		opacity: 1;
 	}
 	.ptit ::v-deep .el-tabs__content{

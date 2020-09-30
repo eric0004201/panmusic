@@ -1,7 +1,10 @@
 <template>
 	<div class="top-bar">
-		<a class="git" href="https://github.com/eric0004201/panmusic" target="_blank"><img src="~assets/images/git.png"/></a>
+		<a v-show="isMV" class="git" href="https://github.com/eric0004201/panmusic" target="_blank"><img src="~assets/images/git.png"/></a>
 		<user></user>
+		<div v-if="isLogin" class="out" @click="loginOut">
+			<el-button size="mini" type="warning">退出登录</el-button>
+		</div>
 		<div class="tit amt">
 			<div class="ttit amt" :class="{aniwd:isa}" v-html="getT"></div>
 			<div v-if="showBack" class="back" @click="back()"><i class="el-icon-arrow-left"></i></div>
@@ -23,11 +26,12 @@
 </template>
 
 <script>
-	import { debounce } from 'common/utils.js'
+	import { debounce, getLogin, setUser,getUser } from 'common/utils.js'
 	import { getSearch } from 'network/find.js'
 	import { mapGetters } from 'vuex'
 	import SearchPop from 'components/content/SearchPop/SearchPop.vue'
 	import User from 'components/content/User/User.vue'
+	import { isLogin, loginOut } from 'common/login.js'
 	
 	export default{
 		name:"TopBar",
@@ -36,10 +40,12 @@
 				input:"",
 				getValue:null,
 				bgon:false,
-				isa:false
-				
+				isa:false,
+				isLogin:isLogin(),
+				isMV:true
 			}
 		},
+		
 		computed:{
 			...mapGetters(['getTitle']),
 			getT(){
@@ -61,6 +67,7 @@
 			SearchPop,
 			User
 		},
+		
 		methods:{
 			getKey(){
 				if(this.input == '') {
@@ -104,6 +111,28 @@
 			},
 			back(){
 				this.$router.go(-1)
+			},
+			loginOut(){
+				loginOut();
+				this.isLogin = false;
+				setUser("用户")
+				setTimeout(()=>{
+					this.$bus.$emit("logOut")
+				},200)
+				
+				
+				
+			}
+		},
+		watch:{
+			'$route' (from,to){
+				setTimeout(()=>{
+					if(this.$route.path.indexOf('video')>0){
+						this.isMV = false;
+					}else{
+						this.isMV = true;
+					}
+				},200)
 			}
 		},
 		mounted() {
@@ -118,7 +147,10 @@
 			this.$bus.$on("goplay",() => {
 				this.bgon = true;
 			})
-			
+			this.$bus.$on("login",()=>{
+				this.name = getUser();
+				this.isLogin = true
+			})
 			this.$bus.$on("pause",() => {
 				this.bgon = false;
 			})
@@ -184,6 +216,13 @@
 		position: absolute;
 		left: 15px;
 		top: 4px;
+		z-index: 2;
+	}
+	.out{
+		position: absolute;
+		left: 273px;
+		top: 17px;
+		width: 30px;
 		z-index: 2;
 	}
 </style>

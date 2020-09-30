@@ -1,12 +1,14 @@
 <template>
-	<div class="user" @mouseenter="gets">
-		<div class="tit amt">
+	<div class="user" >
+		<div class="tit amt" @mouseenter="gets">
 			<i class="el-icon-user"></i>
-			<span v-text="name"></span>
+			<span v-if="isLogin" v-text="name"></span>
+			<span v-if="!isLogin" class="longin" @click="loginIn">登录</span>
 		</div>
+		
 		<div class="user-sheet amt" :class="{off:isoff}">
 			<div v-show="getSheet.length < 5" class="news" @click="plusSheet"><i class="el-icon-plus"></i></div>
-			<div class="utit">我的歌单(本地最多5个)</div>
+			<div class="utit">我的歌单(最多5个)<span class="notips" v-if="!isLogin">本地保存</span></div>
 			<div v-if="getSheet.length===0" class="news-tip">还没有歌单哦，你可以新建一个</div>
 			<div class="user-con">
 				<div @click="playSheet(item.name)" class="user-item" v-for="(item,index) in getSheet" :key="index">
@@ -21,6 +23,7 @@
 <script>
 	import { getUser, setUser, setMySheet, getMySheet, removeMySheet, getMySheetItem } from 'common/utils.js'
 	import { plusSt } from 'common/mixin.js'
+	import { loginOut,setNickName,getNickName, getYunList, isLogin, setYun } from 'common/login.js'
 	
 	export default{
 		name:"User",
@@ -28,24 +31,23 @@
 			return {
 				name:getUser(),
 				getSheet:getMySheet(),
-				isoff:false
+				isoff:false,
+				isLogin:false
 			}
 		},
+		
 		mounted() {
-			if(getUser() === null){
+			this.init();
+			this.$bus.$on("login",()=>{
+				this.name = getUser();
+				this.init();
 				
-				this.$prompt('', '你叫什么', {
-					showClose:false,
-					inputPattern:/^.{1,6}$/,
-					inputErrorMessage: '名字长度只能在1-6位',
-					showCancelButton:false,
-					closeOnClickModal:false,
-					confirmButtonText: '确定'
-				}).then(({ value }) => {
-					setUser(value);
-					this.name = getUser()
-				});
-			}
+			})
+			this.$bus.$on("logOut",()=>{
+				this.name = getUser();
+				this.init();
+			})
+			
 		},
 		mixins:[plusSt],
 		methods:{
@@ -55,7 +57,7 @@
 			removeSheet(n){
 				removeMySheet(n);
 				this.getSheet = getMySheet();
-				
+				setYun()
 			},
 			playSheet(name){
 				let list = getMySheetItem(name);
@@ -73,6 +75,63 @@
 				setTimeout(() =>{
 					this.isoff = false;
 				},400)
+			},
+			loginIn(){
+				this.$bus.$emit("phide")
+				this.$router.push('/login')
+			},
+			init(){
+				this.isLogin = isLogin()
+				if(this.isLogin){
+					
+					getNickName().then(res=>{
+						if(res.data.length===0){
+							this.$prompt('', '你叫什么', {
+								showClose:false,
+								inputPattern:/^.{1,6}$/,
+								inputErrorMessage: '名字长度只能在1-6位',
+								showCancelButton:false,
+								closeOnClickModal:false,
+								confirmButtonText: '确定'
+							}).then(({ value }) => {
+								//setUser(value);
+								//this.name = getUser()
+								setNickName(value)
+								setUser(value)
+								this.name = value
+							});
+						}else{
+							let songSheet = res.data[0].songSheet || []
+							let collectList = res.data[0].collectList || []
+							let mySheet = res.data[0].mySheet || []
+							localStorage.setItem("songSheet",JSON.stringify(songSheet));
+							localStorage.setItem("collectList",JSON.stringify(collectList));
+							localStorage.setItem("mySheet",JSON.stringify(mySheet));
+							this.$bus.$emit("itemChange")
+							this.$bus.$emit("curChange")
+							setUser(res.data[0].name);
+							
+							this.name = res.data[0].name
+							
+						}
+					});
+				}else{
+					setTimeout(()=>{
+						if(this.$route.path.indexOf('login')>0||this.$route.path.indexOf('register')>0){
+							
+						}else{
+							
+							this.$confirm(`亲爱的用户,你还没有登录,你的操作只能保存在本地哦，赶快去登录吧 `).then(res=>{
+								this.$router.push('/login')
+							}).catch(() =>{
+								
+							})
+						}
+					},100)
+					
+					
+					
+				}
 			}
 		}
 	}
@@ -108,7 +167,10 @@
 			color: red;
 		}
 	}
-	
+	.notips,.bgon .notips{
+		font-size: 12px;
+		color: $black2;
+	}
 	.bgon .tit:hover span{
 		color: red;
 	}
@@ -204,4 +266,5 @@
 		
 		transform: translateX(-300px);
 	}
+	
 </style>

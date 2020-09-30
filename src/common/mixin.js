@@ -73,6 +73,7 @@ export const collectSong = {
 	}
 }
 import { setMySheet, getMySheet, removeMySheet } from 'common/utils.js'
+import { setYun } from 'common/login.js'
 export const plusSt = {
 	methods:{
 		plusSheet(){
@@ -92,6 +93,7 @@ export const plusSt = {
 						message: '添加成功',
 						type: 'success'
 					});
+					setYun()
 				}).catch(() => {
 					this.$alert("歌单名字已存在！").catch(() =>{})
 				});
