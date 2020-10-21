@@ -19,14 +19,18 @@
 				<span slot="title">推荐歌单</span>
 			</el-menu-item>
 			<el-menu-item index="/newmusic" class="animate__animated animate__tada myani3">
-				<i class="el-icon-star-off"></i>
+				<i class="el-icon-mic"></i>
 				<span slot="title">最新音乐</span>
 			</el-menu-item>
 			<el-menu-item index="/newmv" class="animate__animated animate__heartBeat myani4">
 				<i class="el-icon-video-camera"></i>
-				<router-link
 				<span slot="title">最新MV</span>
 			</el-menu-item>
+			<el-menu-item index="/ping" class="animate__animated animate__pulse myani5">
+				<i class="el-icon-chat-dot-square"></i>
+				<span slot="title">关于</span>
+			</el-menu-item>
+			
 		</el-menu>
 	</div>
 </template>
@@ -119,7 +123,7 @@
 		transition: all 0.3s;
 		opacity: 0;
 	}
-	.myani1,.myani2,.myani3,.myani4{
+	.myani1,.myani2,.myani3,.myani4,.myani5{
 		animation-iteration-count:infinite;
 		
 	}
@@ -134,5 +138,8 @@
 	}
 	.myani4{
 		animation-delay: 5s;
+	}
+	.myani5{
+		animation-delay: 6s;
 	}
 </style>

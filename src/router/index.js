@@ -15,7 +15,7 @@ const SearchList = () => import('../views/search/children/SearchList.vue');
 const SearchMv = () => import('../views/search/children/SearchMv.vue');
 const Login = () => import('../views/login/Login.vue');
 const Register = () => import('../views/login/Register.vue');
-
+const Ping = () => import('../views/ping/Ping.vue'); 
 
 const originalReplace = VueRouter.prototype.replace
 VueRouter.prototype.replace = function replace(location) {
@@ -98,6 +98,14 @@ Vue.use(VueRouter)
 		}
 	},
 	{
+		path:'/ping',
+		name:'Ping',
+		component:Ping,
+		meta:{
+			title:"关于" 
+		}
+	},
+	{
 		path: '/search/:id',
 		name: 'Search', 
 		component: Search,
@@ -129,6 +137,7 @@ Vue.use(VueRouter)
 					title:"搜索结果" 
 				}
 			}
+			
 		]
 	}
 ]
@@ -144,7 +153,9 @@ router.beforeEach((to,from,next) => {
 		next({ 
 			name: 'FindMusic',
 			replace:true
+			
 		})
+		
 		document.title = '发现音乐';
 		store.commit('setTitle','发现音乐')
 	}else{

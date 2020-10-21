@@ -1,5 +1,5 @@
 <template>
-	<div class="login" v-if="showmt">
+	<div class="login" v-if="showmt" v-loading="loading">
 		<div class="login-in">
 			<div class="tit">账号注册</div>
 			<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
@@ -9,7 +9,7 @@
 												{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
 											]"
 											prop="email">
-			    <el-input v-model.email="ruleForm.email"></el-input>
+			    <el-autocomplete class="auto" v-model.email="ruleForm.email" :fetch-suggestions="querySearch" :trigger-on-focus="false"></el-autocomplete>
 			  </el-form-item>
 				<el-form-item label="密码" 
 											:rules="[{ required: true, message: '请输入密码', trigger: 'blur' },]"
@@ -62,7 +62,10 @@
 				}
 			};
 			return {
+				loading:false,
+				restaurants:this.loadAll(),
 				ruleForm: {
+					
 					pass: '',
 					checkPass: '',
 					email:''
@@ -80,22 +83,55 @@
 		},
 		methods: {
 			submitForm(formName) {
+				
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
-						
+						this.loading = true;
 						register(this.ruleForm.email,this.ruleForm.pass).then(res =>{
-							
-							this.$router.push("./login")
-						})
+							this.$refs[formName].resetFields();
+							this.loading = true;
+							this.$router.replace("./login")
+						}).catch(err=>{})
 						
 					} else {
-						console.log('error submit!!');
+						console.log('error submit!');
+						
 						return false;
 					}
 				});
 			},
 			res(){
 				this.$router.push("./login")
+			},
+			querySearch(queryString, callback) {
+					let restaurants = this.restaurants
+					let results = JSON.parse(JSON.stringify(restaurants))    
+					let s = queryString.split("@")[1];
+					
+					if(s!==""&&s!==undefined){
+						callback([])
+					}else{
+						for (let item in results) {
+								results[item].value = queryString.replace(/@/g,'') + '' + restaurants[item].value
+						}
+						callback(results)
+					}
+					
+			},
+			createFilter() {  
+			},
+			loadAll() {
+					return [
+						{"value": "@163.com"},
+						{"value": "@qq.com"},
+						{"value": "@126.com"},
+						{"value": "@sohu.com"},
+						{"value": "@gmail.com"},
+						{"value": "@sina.com"},
+						{"value": "@outlook.com"},
+						{"value": "@hotmail.com"},
+							
+					]
 			}
 			
 		}
@@ -131,5 +167,8 @@
 	}
 	.bgon .login-in ::v-deep .lk span{
 		color: #409EFF;
+	}
+	.auto{
+		width: 280px;
 	}
 </style>

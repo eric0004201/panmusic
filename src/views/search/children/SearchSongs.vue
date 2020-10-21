@@ -89,24 +89,27 @@
 				
 			},
 			$route(to,from){
-				this.$router.go(0)
+				this.init()
 			}
 		},
 		mounted() {
-			let that = this;
-			this.$bus.$on('openList',(id) => {
-				this.cur = -1;
-				this.tableData.findIndex(function(value, index, arr) {
-					if(id === value.id) {
-						that.cur = index
-						
-					}
-				})
-				
-			});
 			
+			this.init()
 		},
 		methods:{
+			init(){
+				let that = this;
+				this.$bus.$on('openList',(id) => {
+					this.cur = -1;
+					this.tableData.findIndex(function(value, index, arr) {
+						if(id === value.id) {
+							that.cur = index
+							
+						}
+					})
+					
+				});
+			},
 			getSongs(){
 				let pg = this.pageSize * this.page;
 				getResult(this.pageSize, pg, this.key, '').then(res => {

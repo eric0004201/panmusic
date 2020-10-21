@@ -549,14 +549,18 @@
 		border-right: 2px solid #fff;
 	}
 	.play-bar{
-		margin-bottom: 4px;
+		margin-bottom: 6px;
 	}
 	.play-bar ::v-deep .el-slider__runway{
 		margin: 0;
+		margin-top: 5px;
 		height: 3px;
 	}
 	.play-bar ::v-deep .el-slider__button-wrapper{
 		display: none;
+	}
+	.play-bar ::v-deep .el-slider{
+		margin-top: -8px;
 	}
 	// .play-bar:hover ::v-deep .el-slider__button-wrapper{
 	// 	display: block;

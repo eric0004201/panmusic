@@ -1,12 +1,13 @@
 import cloudbase from "@cloudbase/js-sdk/app";
 import "@cloudbase/js-sdk/auth";
 import "@cloudbase/js-sdk/database";
+import "@cloudbase/js-sdk/storage";
 import store from '../store'
 import { getUser, getMySheetAll, setLogin,setUid, getUid } from "./utils.js"
 import { MessageBox,Message } from 'element-ui';
 
 const app = cloudbase.init({
-	env: "panmusic-6g81iwxweac0062e"
+	env: "panq-10cd96"
 });
 const auth = app.auth({
 	 persistence: "local"
@@ -18,6 +19,7 @@ export function login(email,pwd){
 	return new Promise((sus,err)=>{
 		auth.signInWithEmailAndPassword(email, pwd).then((loginState) => {
 			Message('欢迎回来！');
+			
 			sus(loginState)
 		}).catch((e) =>{
 			console.log(err)
@@ -50,14 +52,14 @@ export function loginOut(){
 }
 
 export function register(email,pwd){
-	return new Promise((sus,err)=>{
+	return new Promise((sus,fail)=>{
 		auth.signUpWithEmailAndPassword(email, pwd).then((res) => {
 				MessageBox.alert('恭喜，注册成功啦，请在2小时内前往邮箱激活')
 				sus(res)
 				console.log(res)
 		}).catch(err =>{
 			MessageBox.alert('邮箱地址已存在，请重新注册！')
-			err(err)
+			fail(err)
 			console.log(err)
 		});
 	});
@@ -87,7 +89,8 @@ export function setNickName(name){
 	    name: name,
 			mySheet:mySheet,
 			collectList:collectList,
-			songSheet:songSheet
+			songSheet:songSheet,
+			tou:''
 	  })
 	  .then((res) => {
 			console.log(res)
@@ -160,3 +163,50 @@ export function getYunList(){
 	
 }
 
+export function upfile(path){
+	return new Promise((sus,err)=>{
+		let uid = localStorage.getItem('uid')
+		app.uploadFile({
+			cloudPath: `tou/${uid}.jpeg`,
+			filePath: path,
+			onUploadProgress: function (progressEvent) {
+				
+				var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+				
+			}
+		}).then((result) => {
+			// 上传结果
+			sus(result)
+			
+			collection
+			.update({
+				tou:result.fileID
+			}).then(function (res) {
+				
+			});
+			
+		});
+	})
+}
+
+export async function getfile(id){
+	return new Promise((sus,fail)=>{
+		app.getTempFileURL({
+		    fileList: [id]
+		}).then((res) => {
+			res.fileList.forEach((el) => {
+				if (el.code === "SUCCESS") {
+					sus(el.tempFileURL)
+				
+				} else {
+					//获取下载链接失败
+					fail("no")
+				}
+			});
+		}).catch(err=>{
+			console.log(err)
+		});
+	})
+	
+	
+}

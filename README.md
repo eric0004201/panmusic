@@ -4,7 +4,8 @@
 #
 # 增加了本地自定义歌单编辑
 # 
-# 增加了登录注册功能，用了腾讯云的云数据库，同步了本地的数据，支持邮箱注册
+# 增加了登录注册功能，本站独立不是网易云账号，用了腾讯云的云数据库，前端js操作，同步了本地的数据，支持邮箱注册
+# 本站收藏的歌单数据和网易云没有关系,都是本站独立的
 # 
 # mode_history 里面是最新的，加了很多动画
 
@@ -17,7 +18,7 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npm run dev
 ```
 
 ### Compiles and minifies for production

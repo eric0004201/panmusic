@@ -18,8 +18,8 @@
 	import NewMusic from './child/NewMusic.vue'
 	import MvList from 'components/content/MvList/MvList.vue'
 	
-	
 	import { getBanner, getSongs, getNew, getMV } from 'network/find.js'
+	
 	
 	export default{
 		name:"FindMusic",
@@ -30,6 +30,7 @@
 				list:[],
 				mvList:[],
 				isloading:true
+				
 			}
 		},
 		components:{
@@ -57,6 +58,7 @@
 				this.isloading = false;
 			})
 		}
+		
 	}
 </script>
 

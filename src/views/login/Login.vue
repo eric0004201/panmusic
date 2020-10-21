@@ -41,13 +41,7 @@
 		mounted() {
 		
 		},
-		beforeRouteEnter  (to, from, next) {
-		 
-		  next(vm=>{
-				vm.path = from.path;
-				console.log(vm.path)
-			})
-		},
+		
 		data() {
 			
 			var validatePass = (rule, value, callback) => {
@@ -84,8 +78,8 @@
 						login(this.ruleForm.email,this.ruleForm.pass).then(res=>{
 							this.$bus.$emit("login")
 							this.$refs[formName].resetFields();
-							this.$router.replace(this.path)
-							this.$router.go(-1)
+							this.$router.replace('/findmusic')
+							
 							
 						}).catch(err=>{
 							this.$refs.pwd.blur()

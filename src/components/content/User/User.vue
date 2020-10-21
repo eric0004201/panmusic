@@ -1,7 +1,13 @@
 <template>
 	<div class="user" >
 		<div class="tit amt" @mouseenter="gets">
-			<i class="el-icon-user"></i>
+			
+			<i v-if="tou === ''" class="el-icon-user"></i>
+			<em v-if="tou !== ''">
+				<img class="tou"  :src="tou">
+				<input class="upit" accept="image/*" @change="upfile($event)" type="file">
+			</em>
+			
 			<span v-if="isLogin" v-text="name"></span>
 			<span v-if="!isLogin" class="longin" @click="loginIn">登录</span>
 		</div>
@@ -23,7 +29,7 @@
 <script>
 	import { getUser, setUser, setMySheet, getMySheet, removeMySheet, getMySheetItem } from 'common/utils.js'
 	import { plusSt } from 'common/mixin.js'
-	import { loginOut,setNickName,getNickName, getYunList, isLogin, setYun } from 'common/login.js'
+	import { loginOut, setNickName, getNickName, getYunList, isLogin, setYun, upfile, getfile } from 'common/login.js'
 	
 	export default{
 		name:"User",
@@ -32,7 +38,8 @@
 				name:getUser(),
 				getSheet:getMySheet(),
 				isoff:false,
-				isLogin:false
+				isLogin:false,
+				tou:''
 			}
 		},
 		
@@ -80,7 +87,22 @@
 				this.$bus.$emit("phide")
 				this.$router.push('/login')
 			},
-			init(){
+			upfile(e){
+				let that = this;
+				let obj = e.target.files[0]
+				
+				upfile(obj).then(res=>{
+					
+					let reader = new FileReader();
+					reader = new FileReader();
+					reader.readAsDataURL(obj);
+					reader.onload = function (e) {
+						that.tou = e.target.result
+					}
+				})
+			},
+		 	
+		 	init(){
 				this.isLogin = isLogin()
 				if(this.isLogin){
 					
@@ -110,17 +132,23 @@
 							this.$bus.$emit("itemChange")
 							this.$bus.$emit("curChange")
 							setUser(res.data[0].name);
-							
+							getfile(res.data[0].tou).then(res=>{
+								
+								this.tou = res
+							}).catch(err=>{
+								
+							})
 							this.name = res.data[0].name
 							
 						}
 					});
 				}else{
+					
 					setTimeout(()=>{
 						if(this.$route.path.indexOf('login')>0||this.$route.path.indexOf('register')>0){
 							
 						}else{
-							
+							this.tou = ''
 							this.$confirm(`亲爱的用户,你还没有登录,你的操作只能保存在本地哦，赶快去登录吧 `).then(res=>{
 								this.$router.push('/login')
 							}).catch(() =>{
@@ -266,5 +294,19 @@
 		
 		transform: translateX(-300px);
 	}
-	
+	.tou{
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		vertical-align: middle;
+	}
+	.upit{
+		position: absolute;
+		left: 0;
+		top: 15px;
+		width: 60px;
+		height: 30px;
+		opacity: 0;
+		cursor: pointer;
+	}
 </style>
